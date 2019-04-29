@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RgSite.Data\RgSite.Data.csproj" />
+    <ProjectReference Include="..\RgSite.Service\RgSite.Service.csproj" />
   </ItemGroup>
 
 </Project>

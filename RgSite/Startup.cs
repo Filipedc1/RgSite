@@ -14,6 +14,7 @@ using RgSite.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RgSite.Data.Models;
+using RgSite.Service;
 
 namespace RgSite
 {
@@ -43,6 +44,9 @@ namespace RgSite
                 .AddRoles<IdentityRole>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddScoped<IAppUser, AppUserService>();
+            services.AddScoped<IProduct, ProductService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
