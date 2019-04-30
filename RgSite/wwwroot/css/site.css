@@ -1,11 +1,45 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+
+/*Header and Navbar
+-------------------------------------------------- */
 a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
 }
+
+.header {
+    text-align: center;
+    background: url(../images/pw_maze_black_2X.png) left top repeat;
+    padding: 280px 0;
+}
+
+.logo {
+    width: 130px;
+    margin: 0 auto 35px;
+}
+
+.header h1 {
+    font-family: 'Montserrat',sans-serif;
+    font-size: 50px;
+    font-weight: 400;
+    letter-spacing: -1px;
+    margin: 0 0 22px 0;
+    color: #fff;
+}
+
+.small-logo {
+    padding: 0 32px;
+    height: 90px;
+}
+
+.nav-tab {
+    padding-top: 25px;
+}
+
+
 
 /* Sticky footer styles
 -------------------------------------------------- */
