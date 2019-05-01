@@ -3,6 +3,94 @@
     ViewData["Title"] = "Index";
 }
 
-<div>
-    <img src="~/images/order-code.jpg" class="rounded img-fluid" alt="Cinque Terre">
+
+<div class="main-section" id="products-section">
+    <div class="container">
+        <h2>Services</h2>
+        <h6>We offer exceptional service with complimentary hugs.</h6>
+        <div class="row">
+            <div class="col-lg-4 col-sm-6 wow fadeInLeft delay-05s">
+                <div class="service-list">
+                    <div class="service-list-col1">
+                        <i class="fa fa-paw"></i>
+                    </div>
+                    <div class="service-list-col2">
+                        <h3>branding &amp; identity</h3>
+                        <p>Proin iaculis purus digni consequat sem digni ssim. Donec entum digni ssim.</p>
+                    </div>
+                </div>
+                <div class="service-list">
+                    <div class="service-list-col1">
+                        <i class="fa fa-gear"></i>
+                    </div>
+                    <div class="service-list-col2">
+                        <h3>web development</h3>
+                        <p>Proin iaculis purus consequat sem digni ssim. Digni ssim porttitora .</p>
+                    </div>
+                </div>
+                <div class="service-list">
+                    <div class="service-list-col1">
+                        <i class="fa fa-apple"></i>
+                    </div>
+                    <div class="service-list-col2">
+                        <h3>mobile design</h3>
+                        <p>Proin iaculis purus consequat digni sem digni ssim. Purus donec porttitora entum.</p>
+                    </div>
+                </div>
+                <div class="service-list">
+                    <div class="service-list-col1">
+                        <i class="fa fa-medkit"></i>
+                    </div>
+                    <div class="service-list-col2">
+                        <h3>24/7 Support</h3>
+                        <p>Proin iaculis purus consequat sem digni ssim. Sem porttitora entum.</p>
+                    </div>
+                </div>
+            </div>
+            <figure class="col-lg-8 col-sm-6  text-right wow fadeInUp delay-02s">
+                <img src="img/macbook-pro.png" alt="">
+            </figure>
+
+        </div>
+    </div>
 </div>
+
+
+<div class="main-section alabaster" id="stories-section">
+    <div class="container">
+        <div class="card-columns">
+            @*@foreach (var story in Model.Stories)
+            {
+                <div class="card bg-light" style="height: 480px;">
+                    <img class="card-img-top h-75" src="@story.ImagePath" alt="Card image">
+                    <div class="card-body">
+                        <h5 class="card-title">@story.Name</h5>
+                        <a class="btn btn-primary" asp-controller="Artist" asp-action="Detail" asp-route-id="@story.Id">
+                            See Profile
+                        </a>
+                    </div>
+                </div>
+            }*@
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .featured-box-col1 i {
+	    display:block;
+	    line-height:38px;
+	    font-family: 'FontAwesome';
+	    font-size:38px;
+	    color:#777777;
+	    font-style:normal;
+    }
+
+    .main-section.alabaster {
+	    background:#fafafa;
+    }
+
+    .main-section {
+	    padding:90px 0 110px;
+    }
+</style>
