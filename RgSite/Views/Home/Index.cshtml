@@ -30,6 +30,45 @@
 
 <div class="main-section alabaster" id="stories-section">
     <div class="container">
+        <h2>Carousel</h2>
+        <h6>We offer exceptional service with complimentary hugs.</h6>
+        <div class="row">
+            <div id="demo" class="carousel slide" data-ride="carousel">
+
+                <!-- Indicators -->
+                <ul class="carousel-indicators">
+                    <li data-target="#demo" data-slide-to="0" class="active"></li>
+                    <li data-target="#demo" data-slide-to="1"></li>
+                    <li data-target="#demo" data-slide-to="2"></li>
+                </ul>
+
+                <!-- The slideshow -->
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="~/images/products/amazon.jpg" alt="Los Angeles" width="1100" height="500">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="~/images/collections/hairb.jpg" alt="Chicago" width="1100" height="500">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="~/images/collections/cc.jpg" alt="New York" width="1100" height="500">
+                    </div>
+                </div>
+
+                <!-- Left and right controls -->
+                <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#demo" data-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main-section" id="stories-section">
+    <div class="container">
         <h2>Stories</h2>
         <h6>We offer exceptional service with complimentary hugs.</h6>
         <div class="row">
@@ -79,7 +118,6 @@
     </div>
 </div>
 
-
 <style>
     .featured-box-col1 i {
 	    display:block;
@@ -98,4 +136,8 @@
 	    padding:90px 0 110px;
     }
 
+      .carousel-inner img {
+      width: 100%;
+      height: 100%;
+  }
 </style>
