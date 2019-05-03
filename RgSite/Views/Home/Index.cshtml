@@ -7,17 +7,22 @@
 <div class="main-section" id="products-section">
     <div class="container">
         <div class="row">
-            <ul class="homeColleList">
-                @foreach (var prod in Model.Products)
-                {
-                    <li>
-                        <div class="colleImg">
-                            <img src="@prod.ImageUrl" />
-                            <h2>HAIR B...</h2>
+            <div class="container">
+                <div class="card-columns">
+                    @foreach (var prod in Model.Products)
+                    {
+                        <div class="card bg-light" style="height: 480px;">
+                            <img class="card-img-top h-75" src="@prod.ImageUrl" alt="Card image">
+                            <div class="card-body">
+                                <h5 class="card-title">@prod.Name</h5>
+                                @*<a class="btn btn-primary" asp-controller="Artist" asp-action="Detail" asp-route-id="@prod.ProductId">
+                                    See Profile
+                                </a>*@
+                            </div>
                         </div>
-                    </li>
-                }
-            </ul>
+                    }
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -25,7 +30,7 @@
 
 <div class="main-section alabaster" id="stories-section">
     <div class="container">
-        <h2>Services</h2>
+        <h2>Stories</h2>
         <h6>We offer exceptional service with complimentary hugs.</h6>
         <div class="row">
             <div class="col-lg-4 col-sm-6 wow fadeInLeft delay-05s">
@@ -93,20 +98,4 @@
 	    padding:90px 0 110px;
     }
 
-        ul.homeColleList {
-    list-style: none;
-    padding: 0;
-    margin: 41px 0 0 0;
-}
-
-ul.homeColleList li {
-    float: left;
-    width: 24.3%;
-    text-align: center;
-    background: #fcfcfc;
-    margin-right: 0.9%;
-    margin-bottom: 0.9%;
-    padding-bottom: 3%;
-    padding-top: 5%;
-}
 </style>
