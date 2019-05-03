@@ -4,15 +4,39 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using RgSite.Data;
 using RgSite.Models;
+using RgSite.ViewModels;
 
 namespace RgSite.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        #region Fields
+
+        private readonly IProduct productService;
+
+        #endregion
+
+        #region Constructor
+
+        public HomeController(IProduct productService)
         {
-            return View();
+            this.productService = productService;
+        }
+
+        #endregion
+
+        public async Task<IActionResult> Index()
+        {
+            var products = await productService.GetAllProductsAsync();
+
+            var vM = new HomeIndexViewModel
+            {
+                Products = products
+            };
+
+            return View(vM);
         }
 
         public IActionResult Privacy()
