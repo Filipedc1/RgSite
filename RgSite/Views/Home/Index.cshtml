@@ -30,13 +30,10 @@
 
 <div class="main-section alabaster" id="stories-section">
     <div class="container">
-        <h2>Carousel</h2>
-        <h6>We offer exceptional service with complimentary hugs.</h6>
         <div class="row">
             <div id="demo" class="carousel slide" data-ride="carousel">
-
                 <!-- Indicators -->
-                <ul class="carousel-indicators">
+                <ul class="carousel-indicators" >
                     <li data-target="#demo" data-slide-to="0" class="active"></li>
                     <li data-target="#demo" data-slide-to="1"></li>
                     <li data-target="#demo" data-slide-to="2"></li>
@@ -45,17 +42,23 @@
                 <!-- The slideshow -->
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img class="img-fluid mx-auto d-block" src="~/images/products/amazon.jpg" alt="Los Angeles">
-                        <div class="float-left col-sm-4 align-text-top">
-                            <p>Lightweight gel formula smoothes nad straightens hair without leaving behind a heavy residue</p>
+                        <img class="carousel-logo img-fluid mx-auto d-block" src="~/images/carousel-logo.png" />
+                        <h1 class="carousel-header">AMAZON X-TREME</h1>
+                        <img id="carousel-img" class="img-fluid mx-auto d-block" src="~/images/amazon-nobackground.png">
+                        <div class="carousel-text-div-left-top float-left col-sm-4 align-text-top">
+                            <h4 class="carousel-text-header">WHY IT WORKS</h4>
+                            <p class="carousel-text">Lightweight gel formula smoothes and straightens hair without leaving behind a heavy residue.</p>
                         </div>
-                        
+                        <div class="carousel-text-div-left-bottom float-left col-sm-4 align-text-top">
+                            <h4 class="carousel-text-header">WONDERFUL RESULTS</h4>
+                            <p class="carousel-text">Unique straightening and shine! Results last for up to 12 weeks.</p>
+                        </div>
                     </div>
                     <div class="carousel-item">
-                        <img class="img-fluid mx-auto d-block" src="~/images/collections/hairb.jpg" alt="Chicago">
+                        <img id="carousel-img" class="img-fluid mx-auto d-block" src="~/images/collections/hairb.jpg">
                     </div>
                     <div class="carousel-item">
-                        <img class="img-fluid mx-auto d-block" src="~/images/collections/cc.jpg" alt="New York" >
+                        <img id="carousel-img" class="img-fluid mx-auto d-block" src="~/images/collections/cc.jpg">
                     </div>
                 </div>
 
@@ -123,30 +126,77 @@
 </div>
 
 <style>
-    .featured-box-col1 i {
-	    display:block;
-	    line-height:38px;
-	    font-family: 'FontAwesome';
-	    font-size:38px;
-	    color:#777777;
-	    font-style:normal;
-    }
-
     .main-section.alabaster {
-	    background:#fafafa;
+	    background: #fafafa;
     }
 
     .main-section {
-	    padding:90px 0 110px;
+	    padding: 90px 0 110px;
     }
 
+    .alabaster {
+        padding: inherit;
+        padding-top: 10px;
+        height: 650px
+    }
+
+    /*Carousel
+    --------------------------------------*/
     .carousel {
-        width: 1000px;
-        height: 500px
+        width: 1000px;        
     }
 
-    .carousel-inner img {
-        width: 500px;
+    #carousel-img {
         height: 500px;
     }
+
+    .carousel-header {
+        padding-top: 20px;
+        padding-bottom: 15px;
+        text-align: center;
+        font-size: 62px;
+        font-weight: 900;
+        line-height: 62px; 
+        z-index: 5; 
+        white-space: nowrap; 
+        color: rgb(112, 166, 66);
+    }
+
+    .carousel-text-div-left-top {
+        position: absolute; 
+        display: block; 
+        visibility: visible; 
+        left: 50px; 
+        top: 280px; 
+        z-index: 9;
+    }
+
+    .carousel-text-div-left-bottom {
+        position: absolute; 
+        display: block; 
+        visibility: visible; 
+        left: 50px; 
+        top: 440px; 
+        z-index: 9;
+    }
+
+    .carousel-text-header {
+        z-index: 8; 
+        min-width: 241px; 
+        max-width: 241px; 
+        white-space: nowrap;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 22px; 
+    }
+
+    .carousel-text {
+        z-index: 9; 
+        min-width: 241px; 
+        max-width: 241px; 
+        white-space: normal; 
+        font-size: 12px; 
+        line-height: 22px; 
+    }
+
 </style>
