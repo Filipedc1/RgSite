@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RgSite.Service
 {
-    public class ProductService : IProduct, IProductCollection
+    public class ProductService : IProduct
     {
         private readonly ApplicationDbContext _database;
 

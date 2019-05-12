@@ -1,0 +1,24 @@
+﻿@model RgSite.ViewModels.CollectionIndexViewModel
+
+
+<div class="collections" id="collections">
+    @foreach (var coll in Model.Collections)
+    {
+        <div class="mb-3">
+            <img class="img-fluid" src="@coll.ImageUrl" alt="Card image cap">
+        </div>
+    }
+</div>
+
+
+<style>
+    .collections {
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3;
+        -webkit-column-width: 33%;
+        -moz-column-width: 33%;
+        column-width: 33%;
+    }
+
+</style>
