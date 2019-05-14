@@ -1,14 +1,133 @@
 ﻿@model RgSite.ViewModels.CollectionIndexViewModel
 
 
-<div class="collections" id="collections">
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="wpb_column vc_column_container vc_col-sm-12">
+            <div class="vc_column-inner">
+                <div class="wpb_wrapper">
+                    <div class="wpb_raw_code wpb_content_element wpb_raw_html">
+                        <div class="wpb_wrapper">
+                            <style type="text/css">
+
+                                .product-wrap {
+                                    width: 100%;
+                                    margin-bottom: 2%;
+                                }
+
+                                .flexthis {
+                                    display: -webkit-box;
+                                    display: -moz-box;
+                                    display: -ms-flexbox;
+                                    display: -webkit-flex;
+                                    display: flex;
+                                }
+
+                                .product-left-wrap.flexthis {
+                                    flex-direction: column;
+                                }
+
+                                .product-left-wrap img,
+                                .product-mid-wrap img,
+                                .product-right-wrap img {
+                                    width: 100%;
+                                }
+
+                                .product-left-wrap {
+                                    width: 41.55%;
+                                }
+
+                                .product-mid-wrap.flexthis {
+                                    flex-direction: column;
+                                }
+
+                                .product-mid-wrap {
+                                    width: 30.333%;
+                                }
+
+                                .product-right-wrap.flexthis {
+                                    flex-direction: column;
+                                }
+
+                                .product-right-wrap {
+                                    width: 36.55%;
+                                }
+
+                                .product-wrap .product1 {
+                                    margin: 0 0.5% 0.5% 0.5%;
+                                }
+
+                                .product6 {
+                                    margin-bottom: 0.5%;
+                                }
+
+                                .productt7 {
+                                    margin: 0 0.5% 0.5% 0;
+                                }
+
+                                .product7 {
+                                    margin-bottom: 0.5%;
+                                }
+
+                                .productt9 {
+                                    margin: 0 0.5% 0 0;
+                                }
+
+                                .product-wrap .product2 {
+                                    margin: 0 0.5% 0.5% 0.5%;
+                                }
+
+                                .product-wrap .product3,
+                                .product-wrap .product4,
+                                .product-wrap .product5 {
+                                    margin-right: 0.5%;
+                                    margin-bottom: 0.5%;
+                                }
+                            </style>
+                            <div class="product-wrap flexthis">
+                                <div class="product-left-wrap flexthis">
+                                    <div class="product1"><a href="/product-category/hairb"><img src="~/images/collections/hairb.jpg"></a></div>
+                                    <div class="product2"><a href="/product-category/amazon-x-treme"><img src="~/images/collections/amazon.jpg" height="672"></a></div>
+                                </div>
+                                <div class="product-mid-wrap flexthis">
+                                    <div class="product3"><a href="/product-category/amazon-advanced/"><img src="~/images/collections/amazonadvanced.jpg"></a></div>
+                                    <div class="product4"><a href="/product-category/bb-creme/"><img src="~/images/collections/bbcreme.jpg" height="445"></a></div>
+                                    <div class="product5"><a href="/product-category/sleek-now"><img src="~/images/collections/sleeknow.jpg" height="400"></a></div>
+                                </div>
+                                <div class="product-right-wrap flexthis">
+                                    <div class="product6"><a href="/product-category/filler/"><img src="~/images/collections/filler.jpg"></a></div>
+                                    <div class="inner-product flexthis">
+                                        <div class="productt7"><a href="/product-category/chemicalprotection"><img src="~/images/collections/chemicalprotection.jpg"></a></div>
+                                        <div class="productt8"><a href="/product-category/maintenance"><img src="~/images/collections/maintenance.jpg"></a></div>
+                                    </div>
+                                    <div class="product7"><a href="/product-category/collagen-collection"><img src="~/images/collections/collagen.jpg"></a></div>
+                                    <div class="inner-product flexthis">
+                                        <div class="productt9"><a href="/product-category/cc-line/"><img src="~/images/collections/cc.jpg"></a></div>
+                                        <div class="productt10"><a href="/product/fix-mold/"><img src="~/images/collections/fixandmold.jpg"></a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@*<div class="collections" id="collections">
     @foreach (var coll in Model.Collections)
     {
         <div class="mb-3">
             <img class="img-fluid" src="@coll.ImageUrl" alt="Card image cap">
         </div>
     }
-</div>
+</div>*@
 
 
 <style>
@@ -21,4 +140,68 @@
         column-width: 33%;
     }
 
+    .container-fluid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .container-fluid > .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .vc_column_container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .vc_column-inner {
+        padding-left: 0;
+        padding-right: 0;
+        width: 100%;
+        box-sizing: border-box; 
+    }
+
+    .wpb_content_element {
+        margin-bottom: 0;
+    }
+
+    .flexthis {
+        display: flex;
+    }
+
+    .product-wrap {
+        width: 100%;
+        margin-bottom: 2%;
+    }
+
+    .product-left-wrap.flexthis {
+        flex-direction: column;
+    }
+
+    .product-left-wrap {
+        width: 41.55%;
+    }
+
+    .product-mid-wrap.flexthis {
+        flex-direction: column;
+    }
+
+    .product-mid-wrap {
+        width: 30.333%;
+    }
+
+    .product-right-wrap.flexthis {
+        flex-direction: column;
+    }
+
+    .product-right-wrap {
+        width: 36.55%;
+    }
+
+    @media (min-width: 768px) {
+        .vc_col-sm-12 {
+            width: 100%; 
+        }
+    }
 </style>
