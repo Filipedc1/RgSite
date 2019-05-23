@@ -73,11 +73,21 @@ namespace RgSite.Service
                                   .ToListAsync();
         }
 
-        public async Task<ProductCollection> GetProductCollectionByIdAsync(int id)
+        public async Task<ProductCollection> GetProductCollectionForCustomersByIdAsync(int id)
         {
             return await _database.ProductCollections
                                   .Include(p => p.CollectionProducts)
                                     .ThenInclude(p => p.Product)
+                                        .ThenInclude(p => p.CustomerPrices)
+                                  .FirstOrDefaultAsync(p => p.ProductCollectionId == id);
+        }
+
+        public async Task<ProductCollection> GetProductCollectionForSalonsByIdAsync(int id)
+        {
+            return await _database.ProductCollections
+                                  .Include(p => p.CollectionProducts)
+                                    .ThenInclude(p => p.Product)
+                                        .ThenInclude(p => p.SalonPrices)
                                   .FirstOrDefaultAsync(p => p.ProductCollectionId == id);
         }
     }

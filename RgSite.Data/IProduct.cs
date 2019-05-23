@@ -13,7 +13,8 @@ namespace RgSite.Data
         Task AddProductAsync(Product product);
         Task DeleteProductAsync(int id);
 
-        Task<ProductCollection> GetProductCollectionByIdAsync(int id);
+        Task<ProductCollection> GetProductCollectionForCustomersByIdAsync(int id);
+        Task<ProductCollection> GetProductCollectionForSalonsByIdAsync(int id);
         Task<List<ProductCollection>> GetAllProductCollectionsForCustomersAsync();
         Task<List<ProductCollection>> GetAllProductCollectionsForSalonsAsync();
         Task AddProductCollectionAsync(ProductCollection collection);

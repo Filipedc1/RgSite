@@ -40,6 +40,34 @@ namespace RgSite.Controllers
             return View(vM);
         }
 
+        public async Task<IActionResult> CollectionDetail(int id)
+        {
+            var collection = await productService.GetProductCollectionForCustomersByIdAsync(id);
+
+            var products = collection.CollectionProducts
+                                     .Select(prod => new Product
+                                     {
+                                         ProductId = prod.Product.ProductId,
+                                         Name = prod.Product.Name,
+                                         Description = prod.Product.Description,
+                                         ImageUrl = prod.Product.ImageUrl,
+                                         CustomerPrices = prod.Product.CustomerPrices,
+                                         SalonPrices = prod.Product.SalonPrices
+                                     })
+                                     .ToList();
+
+            var vM = new CollectionDetailViewModel
+            {
+                ProductCollectionId = collection.ProductCollectionId,
+                Name = collection.Name,
+                Description = collection.Description,
+                ImageUrl = collection.ImageUrl,
+                Products = products
+            };
+
+            return View(vM);
+        }
+
         //Reorder collections to be in the same order as the old Rg Site.
         private List<ProductCollection> ReorderCollectionsForProductsPage(List<ProductCollection> collections)
         {
