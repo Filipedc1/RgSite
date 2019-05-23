@@ -87,24 +87,68 @@
                             </style>
                             <div class="product-wrap flexthis">
                                 <div class="product-left-wrap flexthis">
-                                    <div class="product1"><a href="/product-category/hairb"><img src="~/images/collections/hairb.jpg"></a></div>
-                                    <div class="product2"><a href="/product-category/amazon-x-treme"><img src="~/images/collections/amazon.jpg" height="672"></a></div>
+                                    <div class="product1">
+                                        <a asp-controller="Products" asp-action="Detail" asp-route-id="@Model.Collections[0].ProductCollectionId">
+                                            <img src="@Model.Collections[0].ImageUrl">
+                                        </a>
+                                    </div>
+                                    <div class="product2">
+                                        <a asp-controller="Products" asp-action="Detail" asp-route-id="@Model.Collections[1].ProductCollectionId">
+                                            <img src="@Model.Collections[1].ImageUrl">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="product-mid-wrap flexthis">
-                                    <div class="product3"><a href="/product-category/amazon-advanced/"><img src="~/images/collections/amazonadvanced.jpg"></a></div>
-                                    <div class="product4"><a href="/product-category/bb-creme/"><img src="~/images/collections/bbcreme.jpg" height="445"></a></div>
-                                    <div class="product5"><a href="/product-category/sleek-now"><img src="~/images/collections/sleeknow.jpg" height="400"></a></div>
+                                    <div class="product3">
+                                        <a asp-controller="Products" asp-action="Detail" asp-route-id="@Model.Collections[2].ProductCollectionId">
+                                            <img src="@Model.Collections[2].ImageUrl">
+                                        </a>
+                                    </div>
+                                    <div class="product4">
+                                        <a asp-controller="Products" asp-action="Detail" asp-route-id="@Model.Collections[3].ProductCollectionId">
+                                            <img src="@Model.Collections[3].ImageUrl">
+                                        </a>
+                                    </div>
+                                    <div class="product5">
+                                        <a asp-controller="Products" asp-action="Detail" asp-route-id="@Model.Collections[4].ProductCollectionId">
+                                            <img src="@Model.Collections[4].ImageUrl">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="product-right-wrap flexthis">
-                                    <div class="product6"><a href="/product-category/filler/"><img src="~/images/collections/filler.jpg"></a></div>
-                                    <div class="inner-product flexthis">
-                                        <div class="productt7"><a href="/product-category/chemicalprotection"><img src="~/images/collections/chemicalprotection.jpg"></a></div>
-                                        <div class="productt8"><a href="/product-category/maintenance"><img src="~/images/collections/maintenance.jpg"></a></div>
+                                    <div class="product6">
+                                        <a asp-controller="Products" asp-action="Detail" asp-route-id="@Model.Collections[5].ProductCollectionId">
+                                            <img src="@Model.Collections[5].ImageUrl">
+                                        </a>
                                     </div>
-                                    <div class="product7"><a href="/product-category/collagen-collection"><img src="~/images/collections/collagen.jpg"></a></div>
                                     <div class="inner-product flexthis">
-                                        <div class="productt9"><a href="/product-category/cc-line/"><img src="~/images/collections/cc.jpg"></a></div>
-                                        <div class="productt10"><a href="/product/fix-mold/"><img src="~/images/collections/fixandmold.jpg"></a></div>
+                                        <div class="product7">
+                                            <a asp-controller="Products" asp-action="Detail" asp-route-id="@Model.Collections[6].ProductCollectionId">
+                                                <img src="@Model.Collections[6].ImageUrl">
+                                            </a>
+                                        </div>
+                                        <div class="product8">
+                                            <a asp-controller="Products" asp-action="Detail" asp-route-id="@Model.Collections[7].ProductCollectionId">
+                                                <img src="@Model.Collections[7].ImageUrl">
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="product9">
+                                        <a asp-controller="Products" asp-action="Detail" asp-route-id="@Model.Collections[8].ProductCollectionId">
+                                            <img src="@Model.Collections[8].ImageUrl">
+                                        </a>
+                                    </div>
+                                    <div class="inner-product flexthis">
+                                        <div class="product10">
+                                            <a asp-controller="Products" asp-action="Detail" asp-route-id="@Model.Collections[9].ProductCollectionId">
+                                                <img src="@Model.Collections[9].ImageUrl">
+                                            </a>
+                                        </div>
+                                        <div class="product11">
+                                            <a asp-controller="Products" asp-action="Detail" asp-route-id="@Model.Collections[10].ProductCollectionId">
+                                                <img src="@Model.Collections[10].ImageUrl">
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -118,19 +162,6 @@
 
 
 
-
-
-@*<div class="collections" id="collections">
-    @foreach (var coll in Model.Collections)
-    {
-        <div class="mb-3">
-            <img class="img-fluid" src="@coll.ImageUrl" alt="Card image cap">
-        </div>
-    }
-</div>*@
-
-@*todo*@
-@*set a max-width to 100% for all <img /> tags after you figure out how to remove the height for the 3 images*@
 
 <style>
     .collections {

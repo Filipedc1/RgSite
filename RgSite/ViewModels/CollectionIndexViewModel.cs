@@ -8,6 +8,6 @@ namespace RgSite.ViewModels
 {
     public class CollectionIndexViewModel
     {
-        public IEnumerable<ProductCollection> Collections { get; set; }
+        public List<ProductCollection> Collections { get; set; }
     }
 }
