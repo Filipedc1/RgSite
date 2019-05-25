@@ -13,5 +13,8 @@ namespace RgSite.ViewModels
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public IEnumerable<Product> Products { get; set; }
+
+        public string DisplayName => Name?.Split(" ").FirstOrDefault().ToUpper();
+        public string BannerImageName => Name?.Replace("collection", string.Empty).Replace(" ", string.Empty) + "_banner.jpg";
     }
 }
