@@ -1,0 +1,236 @@
+﻿@model RgSite.ViewModels.CollectionIndexViewModel
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="wpb_column vc_column_container vc_col-sm-12">
+            <div class="vc_column-inner">
+                <div class="wpb_wrapper">
+                    <div class="wpb_raw_code wpb_content_element wpb_raw_html">
+                        <div class="wpb_wrapper">
+                            <style type="text/css">
+
+                                .product-wrap {
+                                    width: 100%;
+                                    margin-bottom: 2%;
+                                }
+
+                                .flexthis {
+                                    display: -webkit-box;
+                                    display: -moz-box;
+                                    display: -ms-flexbox;
+                                    display: -webkit-flex;
+                                    display: flex;
+                                }
+
+                                .product-left-wrap.flexthis {
+                                    flex-direction: column;
+                                }
+
+                                .product-left-wrap img,
+                                .product-mid-wrap img,
+                                .product-right-wrap img {
+                                    width: 100%;
+                                }
+
+                                .product-left-wrap {
+                                    width: 41.55%;
+                                }
+
+                                .product-mid-wrap.flexthis {
+                                    flex-direction: column;
+                                }
+
+                                .product-mid-wrap {
+                                    width: 30.333%;
+                                }
+
+                                .product-right-wrap.flexthis {
+                                    flex-direction: column;
+                                }
+
+                                .product-right-wrap {
+                                    width: 36.55%;
+                                }
+
+                                .product-wrap .product1 {
+                                    margin: 0 0.5% 0.5% 0.5%;
+                                }
+
+                                .product6 {
+                                    margin-bottom: 0.5%;
+                                }
+
+                                .productt7 {
+                                    margin: 0 0.5% 0.5% 0;
+                                }
+
+                                .product7 {
+                                    margin-bottom: 0.5%;
+                                }
+
+                                .productt9 {
+                                    margin: 0 0.5% 0 0;
+                                }
+
+                                .product-wrap .product2 {
+                                    margin: 0 0.5% 0.5% 0.5%;
+                                }
+
+                                .product-wrap .product3,
+                                .product-wrap .product4,
+                                .product-wrap .product5 {
+                                    margin-right: 0.5%;
+                                    margin-bottom: 0.5%;
+                                }
+                            </style>
+                            <div class="product-wrap flexthis">
+                                <div class="product-left-wrap flexthis">
+                                    <div class="product1">
+                                        <a asp-controller="Products" asp-action="CollectionDetail" asp-route-id="@Model.Collections[0].ProductCollectionId">
+                                            <img src="@Model.Collections[0].ImageUrl">
+                                        </a>
+                                    </div>
+                                    <div class="product2">
+                                        <a asp-controller="Products" asp-action="CollectionDetail" asp-route-id="@Model.Collections[1].ProductCollectionId">
+                                            <img src="@Model.Collections[1].ImageUrl">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="product-mid-wrap flexthis">
+                                    <div class="product3">
+                                        <a asp-controller="Products" asp-action="CollectionDetail" asp-route-id="@Model.Collections[2].ProductCollectionId">
+                                            <img src="@Model.Collections[2].ImageUrl">
+                                        </a>
+                                    </div>
+                                    <div class="product4">
+                                        <a asp-controller="Products" asp-action="CollectionDetail" asp-route-id="@Model.Collections[3].ProductCollectionId">
+                                            <img src="@Model.Collections[3].ImageUrl">
+                                        </a>
+                                    </div>
+                                    <div class="product5">
+                                        <a asp-controller="Products" asp-action="CollectionDetail" asp-route-id="@Model.Collections[4].ProductCollectionId">
+                                            <img src="@Model.Collections[4].ImageUrl">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="product-right-wrap flexthis">
+                                    <div class="product6">
+                                        <a asp-controller="Products" asp-action="CollectionDetail" asp-route-id="@Model.Collections[5].ProductCollectionId">
+                                            <img src="@Model.Collections[5].ImageUrl">
+                                        </a>
+                                    </div>
+                                    <div class="inner-product flexthis">
+                                        <div class="product7">
+                                            <a asp-controller="Products" asp-action="CollectionDetail" asp-route-id="@Model.Collections[6].ProductCollectionId">
+                                                <img src="@Model.Collections[6].ImageUrl">
+                                            </a>
+                                        </div>
+                                        <div class="product8">
+                                            <a asp-controller="Products" asp-action="CollectionDetail" asp-route-id="@Model.Collections[7].ProductCollectionId">
+                                                <img src="@Model.Collections[7].ImageUrl">
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="product9">
+                                        <a asp-controller="Products" asp-action="CollectionDetail" asp-route-id="@Model.Collections[8].ProductCollectionId">
+                                            <img src="@Model.Collections[8].ImageUrl">
+                                        </a>
+                                    </div>
+                                    <div class="inner-product flexthis">
+                                        <div class="product10">
+                                            <a asp-controller="Products" asp-action="CollectionDetail" asp-route-id="@Model.Collections[9].ProductCollectionId">
+                                                <img src="@Model.Collections[9].ImageUrl">
+                                            </a>
+                                        </div>
+                                        <div class="product11">
+                                            <a asp-controller="Products" asp-action="CollectionDetail" asp-route-id="@Model.Collections[10].ProductCollectionId">
+                                                <img src="@Model.Collections[10].ImageUrl">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<style>
+    .collections {
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3;
+        -webkit-column-width: 33%;
+        -moz-column-width: 33%;
+        column-width: 33%;
+    }
+
+    .container-fluid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .container-fluid > .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .vc_column_container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .vc_column-inner {
+        padding-left: 0;
+        padding-right: 0;
+        width: 100%;
+        box-sizing: border-box; 
+    }
+
+    .wpb_content_element {
+        margin-bottom: 0;
+    }
+
+    .flexthis {
+        display: flex;
+    }
+
+    .product-wrap {
+        width: 100%;
+        margin-bottom: 2%;
+    }
+
+    .product-left-wrap.flexthis {
+        flex-direction: column;
+    }
+
+    .product-left-wrap {
+        width: 41.55%;
+    }
+
+    .product-mid-wrap.flexthis {
+        flex-direction: column;
+    }
+
+    .product-mid-wrap {
+        width: 30.333%;
+    }
+
+    .product-right-wrap.flexthis {
+        flex-direction: column;
+    }
+
+    .product-right-wrap {
+        width: 36.55%;
+    }
+
+
+</style>

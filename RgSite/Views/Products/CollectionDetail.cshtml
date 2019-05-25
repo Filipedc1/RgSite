@@ -1,0 +1,128 @@
+﻿@model  RgSite.ViewModels.CollectionDetailViewModel
+
+<img class="banner" src="~/images/banners/@Model.BannerImageName" />
+
+<div class="collection-info-section">
+    <div class="container">
+        <h2 class="collection-title">@Model.DisplayName</h2>
+        <p>@Model.Description</p>
+        <div class="row">
+            <div class="col-lg-6 products-info">
+                @foreach (var prod in Model.Products)
+                {
+                    <div>
+                        <h6><strong>@prod.Name.ToUpper()</strong></h6>
+                        <p>@prod.Description</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Following same style as the old site*@
+@*<div class="products-section">
+    <div class="container">
+        <h2 class="products-title">PRODUCTS</h2>
+        <div class="product-content">
+            @foreach (var prod in Model.Products)
+            {
+                <div class="product-container">
+                    <a asp-controller="Products" asp-action="ProductDetail" asp-route-id="@prod.ProductId">
+                        <div class="product-image" style="background-image: url(@prod.ImageUrl)"></div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>*@
+
+@*Using Cards*@
+<div class="products-section">
+    <div class="container">
+        <h2 class="products-title">PRODUCTS</h2>
+        <div class="row">
+            
+            @foreach (var prod in Model.Products)
+            {
+
+                <div class="card mb-2 mr-2 w-25 bg-light" >
+                    <img class="card-img-top tester" src="@prod.ImageUrl" alt="Card image">
+                    <div class="card-body">
+                        <h6 class="card-title">@prod.Name.ToUpper()</h6>
+                        <p>$23.00</p>
+                        <a class="btn btn-primary" asp-controller="Artist" asp-action="Detail" asp-route-id="@prod.ProductId">
+                            Details
+                        </a>
+                        <a class="btn btn-primary" asp-controller="Artist" asp-action="Detail" asp-route-id="@prod.ProductId">
+                            Add To Cart
+                        </a>
+                    </div>
+                </div>
+
+            }
+            
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    .banner {
+        height: auto;
+        max-width: 100%;
+        width: 100%;
+        vertical-align: top;
+    }
+
+    /*Collection Section
+    --------------------------------------*/
+    .collection-title {
+        font-size: 60px;
+        font-weight: 100 !important;
+        text-transform: uppercase;
+        line-height: 1.03;
+        padding-top: 15px;
+    }
+
+    h2 {
+        font-family: 'Lato', Arial, sans-serif;
+        color: #262e31;
+    }
+
+    /*Products Section
+    --------------------------------------*/
+    .products-section {
+        background: #E7E7E7;
+    }
+
+    .products-title {
+        padding-top: 15px;
+        font-weight: bold;
+    }
+
+    .product-content {
+        padding: 24px;
+    }
+
+    .product-image {
+        height: 280px;
+        width: 280px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .product-container {
+        padding: 8px;
+        background: #fff;
+        border-radius: 2px;
+        display: inline-block;
+        height: 300px;
+        width: 300px;
+        margin: 12px;
+        position: relative;
+        box-shadow: 0 10px 18px rgba(0,0,0,0.2), 0 5px 5px rgba(0,0,0,0.2);
+    }
+</style>

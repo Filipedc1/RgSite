@@ -1,0 +1,53 @@
+﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container">
+        @*<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RgSite</a>*@
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+            <partial name="_LoginPartial" />
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item nav-tab">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">HOME</a>
+                </li>
+                <li class="nav-item nav-tab">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">ABOUT US</a>
+                </li>
+                <li class="nav-item nav-tab">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">PRODUCTS</a>
+                </li>
+                <li class="nav-item nav-tab">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">BECOME A DISTRIBUTOR</a>
+                </li>
+                <li>
+                    <a><img class="small-logo" src="~/images/logo.png" alt=""></a>
+                </li>
+                <li class="nav-item nav-tab">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">CONTACT US</a>
+                </li>
+                <li class="nav-item nav-tab">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">RG NEAR YOU</a>
+                </li>
+
+                <!-- Dropdown -->
+                <li class="nav-item nav-tab dropdown">
+                    <a class="nav-link text-dark dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                        MORE
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Media</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Press</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Stories</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .navbar {
+        margin-bottom: 0 !important;
+    }
+</style>
