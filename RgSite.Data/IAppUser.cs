@@ -11,5 +11,8 @@ namespace RgSite.Data
         Task<AppUser> GetByIdAsync(string id);
         Task<IEnumerable<AppUser>> GetAllAsync();
         Task SetProfileImage(string id, string url);
+        Task<AppUser> GetCurrentUser();
+        Task<string> GetCurrentUserRole();
+        string GetCurrentUserName();
     }
 }

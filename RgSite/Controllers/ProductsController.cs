@@ -14,14 +14,16 @@ namespace RgSite.Controllers
         #region Fields
 
         private readonly IProduct productService;
+        private readonly IAppUser userService;
 
         #endregion
 
         #region Constructor
 
-        public ProductsController(IProduct productService)
+        public ProductsController(IProduct productService, IAppUser userService)
         {
             this.productService = productService;
+            this.userService = userService;
         }
 
         #endregion
@@ -43,16 +45,21 @@ namespace RgSite.Controllers
         public async Task<IActionResult> CollectionDetail(int id)
         {
             var collection = await productService.GetProductCollectionForCustomersByIdAsync(id);
+            string role = await userService.GetCurrentUserRole();
+
+            //use this for testing so you can see prices
+            //string role = "Customer";
 
             var products = collection.CollectionProducts
-                                     .Select(prod => new Product
+                                     .Select(prod => new ProductViewModel
                                      {
                                          ProductId = prod.Product.ProductId,
                                          Name = prod.Product.Name,
                                          Description = prod.Product.Description,
                                          ImageUrl = prod.Product.ImageUrl,
                                          CustomerPrices = prod.Product.CustomerPrices,
-                                         SalonPrices = prod.Product.SalonPrices
+                                         SalonPrices = prod.Product.SalonPrices,
+                                         PriceRange = productService.GetProductPriceRange(prod.Product, role)
                                      })
                                      .ToList();
 

@@ -19,5 +19,6 @@ namespace RgSite.Data
         Task<List<ProductCollection>> GetAllProductCollectionsForSalonsAsync();
         Task AddProductCollectionAsync(ProductCollection collection);
         Task DeleteProductCollectionAsync(int id);
+        string GetProductPriceRange(Product product, string role);
     }
 }

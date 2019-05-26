@@ -3,6 +3,7 @@ using RgSite.Data;
 using RgSite.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,10 +12,12 @@ namespace RgSite.Service
     public class ProductService : IProduct
     {
         private readonly ApplicationDbContext _database;
+        private readonly IAppUser userService;
 
-        public ProductService(ApplicationDbContext context)
+        public ProductService(ApplicationDbContext context, IAppUser userService)
         {
             _database = context;
+            this.userService = userService;
         }
 
         public async Task AddProductAsync(Product product)
@@ -89,6 +92,23 @@ namespace RgSite.Service
                                     .ThenInclude(p => p.Product)
                                         .ThenInclude(p => p.SalonPrices)
                                   .FirstOrDefaultAsync(p => p.ProductCollectionId == id);
+        }
+
+        public string GetProductPriceRange(Product product, string role)
+        {
+            //string role = await userService.GetCurrentUserRole();
+            string range = string.Empty;
+
+            if (role == RoleName.Customer && product.CustomerPrices != null && product.CustomerPrices.Count() > 0)
+            {
+                range = $"${product.CustomerPrices.FirstOrDefault().Cost} - ${product.CustomerPrices.LastOrDefault().Cost}";
+            }
+            else if (role == RoleName.Salon && product.SalonPrices != null && product.SalonPrices.Count() > 0)
+            {
+                range = $"${product.SalonPrices.FirstOrDefault()} - ${product.SalonPrices.LastOrDefault()}";
+            }
+
+            return range ?? "N/A";
         }
     }
 }
