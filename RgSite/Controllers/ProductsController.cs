@@ -45,10 +45,11 @@ namespace RgSite.Controllers
         public async Task<IActionResult> CollectionDetail(int id)
         {
             var collection = await productService.GetProductCollectionForCustomersByIdAsync(id);
-            string role = await userService.GetCurrentUserRole();
+            string role = RoleName.Customer;
 
-            //use this for testing so you can see prices
-            //string role = "Customer";
+            // If user is not logged in, assume Customer role
+            if (HttpContext.User.Identity.IsAuthenticated)
+                role = await userService.GetCurrentUserRole();
 
             var products = collection.CollectionProducts
                                      .Select(prod => new ProductViewModel
