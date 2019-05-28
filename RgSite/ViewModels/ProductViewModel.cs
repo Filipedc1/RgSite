@@ -1,4 +1,5 @@
-﻿using RgSite.Data.Models;
+﻿using RgSite.Data;
+using RgSite.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,12 @@ namespace RgSite.ViewModels
         public string Description   { get; set; }
         public string ImageUrl      { get; set; }
         public string PriceRange    { get; set; }
+        public int Quantity         { get; set; } = 1;
 
+        public IPrice Price                 { get; set; }
+        public IEnumerable<IPrice> Prices   { get; set; }
+
+        public string DisplayName => Name?.ToUpper();
 
         public virtual IEnumerable<CustomerPrice> CustomerPrices    { get; set; }
         public virtual IEnumerable<SalonPrice> SalonPrices          { get; set; }

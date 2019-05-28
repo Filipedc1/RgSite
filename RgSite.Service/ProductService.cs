@@ -39,11 +39,18 @@ namespace RgSite.Service
                                   .ToListAsync();
         }
 
-        public async Task<Product> GetProductByIdAsync(int id)
+        public async Task<Product> GetProductForCustomerByIdAsync(int id)
         {
             return await _database.Products
                                   .Include(p => p.CollectionProducts)
                                   .Include(p => p.CustomerPrices)
+                                  .FirstOrDefaultAsync(p => p.ProductId == id);
+        }
+
+        public async Task<Product> GetProductForSalonByIdAsync(int id)
+        {
+            return await _database.Products
+                                  .Include(p => p.CollectionProducts)
                                   .Include(p => p.SalonPrices)
                                   .FirstOrDefaultAsync(p => p.ProductId == id);
         }
@@ -96,7 +103,6 @@ namespace RgSite.Service
 
         public string GetProductPriceRange(Product product, string role)
         {
-            //string role = await userService.GetCurrentUserRole();
             string range = string.Empty;
 
             if (role == RoleName.Customer && product.CustomerPrices != null && product.CustomerPrices.Count() > 0)
@@ -107,8 +113,44 @@ namespace RgSite.Service
             {
                 range = $"${product.SalonPrices.FirstOrDefault()} - ${product.SalonPrices.LastOrDefault()}";
             }
+            else
+            {
+                range = "N/A";
+            }
 
-            return range ?? "N/A";
+            return range;
+        }
+
+        public IEnumerable<IPrice> GetPrices(Product product, string role)
+        {
+            var prices = new List<IPrice>();
+
+            if (role == RoleName.Customer)
+            {
+                prices = product.CustomerPrices.ToList<IPrice>();
+            }
+            else if (role == RoleName.Salon)
+            {
+                prices = product.SalonPrices.ToList<IPrice>();
+            }
+
+            return prices;
+        }
+
+        public decimal GetPrice(Product product, string selectedSize, string role)
+        {
+            var prices = new List<IPrice>();
+
+            if (role == RoleName.Customer)
+            {
+                prices = product.CustomerPrices.ToList<IPrice>();
+            }
+            else if (role == RoleName.Salon)
+            {
+                prices = product.SalonPrices.ToList<IPrice>();
+            }
+
+            return prices.FirstOrDefault(p => p.Size == selectedSize).Cost;
         }
     }
 }

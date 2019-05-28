@@ -44,12 +44,16 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> CollectionDetail(int id)
         {
-            var collection = await productService.GetProductCollectionForCustomersByIdAsync(id);
-            string role = RoleName.Customer;
-
             // If user is not logged in, assume Customer role
-            if (HttpContext.User.Identity.IsAuthenticated)
-                role = await userService.GetCurrentUserRole();
+            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
+
+            var collection = new ProductCollection();
+
+            if (role == RoleName.Customer)
+                collection = await productService.GetProductCollectionForCustomersByIdAsync(id);
+            else
+                collection = await productService.GetProductCollectionForSalonsByIdAsync(id);
+
 
             var products = collection.CollectionProducts
                                      .Select(prod => new ProductViewModel
@@ -76,6 +80,57 @@ namespace RgSite.Controllers
             return View(vM);
         }
 
+        public async Task<IActionResult> ProductDetail(int id)
+        {
+            // If user is not logged in, assume Customer role
+            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
+
+            var product = new Product();
+
+            if (role == RoleName.Customer)
+                product = await productService.GetProductForCustomerByIdAsync(id);
+            else
+                product = await productService.GetProductForSalonByIdAsync(id);
+
+            var vM = new ProductViewModel
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                Description = product.Description,
+                ImageUrl = product.ImageUrl,
+                CustomerPrices = product.CustomerPrices,
+                SalonPrices = product.SalonPrices,
+                PriceRange = productService.GetProductPriceRange(product, role),
+                Prices = productService.GetPrices(product, role)
+            };
+
+            return View(vM);
+        }
+
+        public async Task<IActionResult> GetPrice(int productId, string selectedSize)
+        {
+            // If user is not logged in, assume Customer role
+            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
+
+            var product = new Product();
+            decimal cost = 0;
+
+            if (role == RoleName.Customer)
+                product = await productService.GetProductForCustomerByIdAsync(productId);
+            else
+                product = await productService.GetProductForSalonByIdAsync(productId);
+
+            if (product != null)
+                cost = productService.GetPrice(product, selectedSize, role);
+
+            var result = $"${cost}";
+
+            return Json(new { price = result });
+        }
+
+
+        #region Helpers
+
         //Reorder collections to be in the same order as the old Rg Site.
         private List<ProductCollection> ReorderCollectionsForProductsPage(List<ProductCollection> collections)
         {
@@ -96,5 +151,7 @@ namespace RgSite.Controllers
 
             return reorderedList;
         }
+
+        #endregion
     }
 }

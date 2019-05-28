@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace RgSite.Data.Models
 {
-    public class SalonPrice
+    public class SalonPrice : IPrice
     {
         public int Id        { get; set; }
         public string Size   { get; set; }
