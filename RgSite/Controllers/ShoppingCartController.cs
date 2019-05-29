@@ -12,14 +12,16 @@ namespace RgSite.Controllers
     public class ShoppingCartController : Controller
     {
         private readonly IProduct productService;
+        private readonly IShoppingCart cartService;
         private readonly IAppUser userService;
 
         #region Constructor
 
-        public ShoppingCartController(IProduct productService, IAppUser userService)
+        public ShoppingCartController(IProduct productService, IShoppingCart cartService, IAppUser userService)
         {
             this.productService = productService;
             this.userService = userService;
+            this.cartService = cartService;
         }
 
         #endregion
@@ -29,7 +31,7 @@ namespace RgSite.Controllers
             return View();
         }
 
-        public IActionResult Detail()
+        public IActionResult Detail(int id)
         {
             return View();
         }
@@ -53,18 +55,38 @@ namespace RgSite.Controllers
             var price = productService.GetPrices(product, role)
                                       .FirstOrDefault(p => p.Id == model.Price.Id);
 
-            var cartItem = new CartItem
+            if (await cartService.IsInCartAsync(model.ProductId))
             {
-                Id = product.ProductId,
-                Name = product.Name,
-                Description = product.Description,
-                ImageUrl = product.ImageUrl,
-                Quantity = model.Quantity,
-                Price = price
-            };
+                await cartService.UpdateQuantityAsync(model.ProductId);
+                return RedirectToAction("ProductDetail", "Products", new { id = product.ProductId });
+            }
+            else
+            {
+                var cartItem = new CartItem
+                {
+                    Id = product.ProductId,
+                    Name = product.Name,
+                    Description = product.Description,
+                    ImageUrl = product.ImageUrl,
+                    Quantity = model.Quantity,
+                    Price = price
+                };
 
-            //productId value is not being passed to Detail action why??
-            return RedirectToAction("ProductDetail", "Products", new { product.ProductId });
+                if (await cartService.AddItemAsync(cartItem))
+                    return RedirectToAction("ProductDetail", "Products", new { id = product.ProductId });
+            }
+
+            return BadRequest();
+        }
+
+        public async Task<IActionResult> RemoveFromCart(int id)
+        {
+            var item = await cartService.GetByIdAsync(id);
+
+            if (await cartService.DeleteItemAsync(item))
+                return RedirectToAction("Index");
+
+            return BadRequest();
         }
     }
 }

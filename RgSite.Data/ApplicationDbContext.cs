@@ -16,6 +16,7 @@ namespace RgSite.Data
         public DbSet<ProductCollection> ProductCollections  { get; set; }
         public DbSet<CustomerPrice> CustomerPrices          { get; set; }
         public DbSet<SalonPrice> SalonPrices                { get; set; }
+        public DbSet<CartItem> ShoppingCartItems            { get; set; }
 
 
         // Junction table
