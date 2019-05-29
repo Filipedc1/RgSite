@@ -121,36 +121,34 @@ namespace RgSite.Service
             return range;
         }
 
-        public IEnumerable<IPrice> GetPrices(Product product, string role)
+        public IEnumerable<Price> GetPrices(Product product, string role)
         {
-            var prices = new List<IPrice>();
+            var prices = new List<Price>();
 
             if (role == RoleName.Customer)
             {
-                prices = product.CustomerPrices.ToList<IPrice>();
+                var results = product.CustomerPrices.Select(p => new Price
+                {
+                    Id = p.Id,
+                    Size = p.Size,
+                    Cost = p.Cost
+                }).ToList();
+
+                prices.AddRange(results);
             }
             else if (role == RoleName.Salon)
             {
-                prices = product.SalonPrices.ToList<IPrice>();
+                var results = product.SalonPrices.Select(p => new Price
+                {
+                    Id = p.Id,
+                    Size = p.Size,
+                    Cost = p.Cost
+                }).ToList();
+
+                prices.AddRange(results);
             }
 
             return prices;
-        }
-
-        public decimal GetPrice(Product product, string selectedSize, string role)
-        {
-            var prices = new List<IPrice>();
-
-            if (role == RoleName.Customer)
-            {
-                prices = product.CustomerPrices.ToList<IPrice>();
-            }
-            else if (role == RoleName.Salon)
-            {
-                prices = product.SalonPrices.ToList<IPrice>();
-            }
-
-            return prices.FirstOrDefault(p => p.Size == selectedSize).Cost;
         }
     }
 }

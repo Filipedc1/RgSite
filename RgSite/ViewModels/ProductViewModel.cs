@@ -16,8 +16,8 @@ namespace RgSite.ViewModels
         public string PriceRange    { get; set; }
         public int Quantity         { get; set; } = 1;
 
-        public IPrice Price                 { get; set; }
-        public IEnumerable<IPrice> Prices   { get; set; }
+        public Price Price                 { get; set; }
+        public IEnumerable<Price> Prices   { get; set; }
 
         public string DisplayName => Name?.ToUpper();
 

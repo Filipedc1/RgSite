@@ -121,7 +121,7 @@ namespace RgSite.Controllers
                 product = await productService.GetProductForSalonByIdAsync(productId);
 
             if (product != null)
-                cost = productService.GetPrice(product, selectedSize, role);
+                cost = productService.GetPrices(product, role).FirstOrDefault(p => p.Size == selectedSize).Cost;
 
             var result = $"${cost}";
 
