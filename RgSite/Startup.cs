@@ -45,6 +45,8 @@ namespace RgSite
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddHttpContextAccessor();
+
             services.AddScoped<IAppUser, AppUserService>();
             services.AddScoped<IProduct, ProductService>();
 

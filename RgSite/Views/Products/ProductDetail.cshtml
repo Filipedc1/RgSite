@@ -1,0 +1,113 @@
+﻿@model RgSite.ViewModels.ProductViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="content-area col-md-12">
+            <div class="product-details row">
+                <div class="product-image col-md-6 col-sm-6 col-xs-12">
+                    <img src="~/images/products/hairbsh32-600x600.jpg" />
+                </div>
+                <div class="summary col-md-6 col-sm-6 col-xs-12">
+                    <h1>@Model.DisplayName</h1>
+                    <p>@Model.Description</p>
+                    <h3>@Model.PriceRange</h3>
+                    <br /><br /><br />
+                    <h2 id="cost">$0.00</h2>
+                    <br />
+                    <form asp-controller="ShoppingCart" asp-action="AddToCart" class="form-horizontal" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                                    @Html.DropDownListFor(c => c.Price.Id, new SelectList(Model.Prices, "Id", "Size"), "Select Size", new { @class = "form-control", @id = "selected-size" })
+                                    <span asp-validation-for="Price.Id" class="text-danger"></span>
+                                </div>
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                                    <input asp-for="Quantity" class="form-control" />
+                                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                                </div>
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                                    <button type="submit" class="btn btn-primary custom-button-color">ADD TO CART</button>
+                                </div>
+                            </div>
+                        </div>
+                        @Html.HiddenFor(m => m.ProductId)
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<style>
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .row {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+
+    .content-area {
+        margin-top: 0;
+    }
+
+    .product-details {
+        padding: 40px 25px 0;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .product-image {
+        padding-left: 0;
+        padding-right: 0;
+        position: relative;
+    }
+
+    .summary {
+        font-size: 16px;
+        color: #55616a;
+        margin-bottom: 0 !important;
+        border: none;
+        padding: 0 40px 0 40px;
+    }
+
+    h1 {
+        font-family: 'Lato', Arial, sans-serif;
+        color: #262e31;
+    }
+
+    .custom-button-color {
+        background-color: #e11383;
+	    border-color: #e11383;
+    }
+
+    .custom-button-color:hover {
+        background-color: #e11383;
+	    border-color: #e11383;
+    }
+</style>
+
+
+@section scripts
+{
+    <script>
+
+        //Get product price based on selected size in the dropdown
+        $('#selected-size').change(function (e) {
+            var selectedSize = $('#selected-size option:selected').text();
+            var productId = $('#ProductId').val();
+
+            $.getJSON('/Products/GetPrice', { productId: productId, selectedSize: selectedSize }, function(json) {
+                $('#cost').text(json.price);
+            });
+        });
+
+    </script>
+}

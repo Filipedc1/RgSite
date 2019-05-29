@@ -8,7 +8,8 @@ namespace RgSite.Data
 {
     public interface IProduct
     {
-        Task<Product> GetProductByIdAsync(int id);
+        Task<Product> GetProductForCustomerByIdAsync(int id);
+        Task<Product> GetProductForSalonByIdAsync(int id);
         Task<List<Product>> GetAllProductsAsync();
         Task AddProductAsync(Product product);
         Task DeleteProductAsync(int id);
@@ -19,5 +20,7 @@ namespace RgSite.Data
         Task<List<ProductCollection>> GetAllProductCollectionsForSalonsAsync();
         Task AddProductCollectionAsync(ProductCollection collection);
         Task DeleteProductCollectionAsync(int id);
+        string GetProductPriceRange(Product product, string role);
+        IEnumerable<Price> GetPrices(Product product, string role);
     }
 }

@@ -50,11 +50,11 @@
                     <img class="card-img-top tester" src="@prod.ImageUrl" alt="Card image">
                     <div class="card-body">
                         <h6 class="card-title">@prod.Name.ToUpper()</h6>
-                        <p>$23.00</p>
-                        <a class="btn btn-primary" asp-controller="Artist" asp-action="Detail" asp-route-id="@prod.ProductId">
+                        <p class="price-range">@prod.PriceRange</p>
+                        <a class="btn btn-primary custom-button-color" asp-controller="Products" asp-action="ProductDetail" asp-route-id="@prod.ProductId">
                             Details
                         </a>
-                        <a class="btn btn-primary" asp-controller="Artist" asp-action="Detail" asp-route-id="@prod.ProductId">
+                        <a class="btn btn-primary custom-button-color" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@prod.ProductId">
                             Add To Cart
                         </a>
                     </div>
@@ -100,6 +100,21 @@
     .products-title {
         padding-top: 15px;
         font-weight: bold;
+    }
+
+    .custom-button-color {
+        background-color: #e11383;
+	    border-color: #e11383;
+    }
+
+    .custom-button-color:hover {
+        background-color: #e11383;
+	    border-color: #e11383;
+    }
+
+    .price-range {
+        font-weight: bold;
+        color: #b5011e;
     }
 
     .product-content {
