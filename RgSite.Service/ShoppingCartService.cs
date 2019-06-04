@@ -13,25 +13,28 @@ namespace RgSite.Service
     {
         private readonly ApplicationDbContext _database;
         private readonly IAppUser userService;
+        private readonly IProduct productService;
 
-        public ShoppingCartService(ApplicationDbContext context, IAppUser userService)
+        public ShoppingCartService(ApplicationDbContext context, IAppUser userService, IProduct productService)
         {
             _database = context;
             this.userService = userService;
+            this.productService = productService;
         }
 
-        public async Task<IEnumerable<CartItem>> GetAllAsync()
+        public async Task<List<CartItem>> GetAllAsync(string userId)
         {
             return await _database.ShoppingCartItems
                                   .Include(i => i.User)
+                                  .Where(i => i.User.Id == userId)
                                   .ToListAsync();
         }
 
-        public async Task<CartItem> GetByIdAsync(int id)
+        public async Task<CartItem> GetByIdAsync(int itemId)
         {
             return await _database.ShoppingCartItems
                                   .Include(i => i.User)
-                                  .FirstOrDefaultAsync(i => i.Id == id);
+                                  .FirstOrDefaultAsync(i => i.Id == itemId);
         }
 
         public async Task<bool> AddItemAsync(CartItem item)
@@ -69,6 +72,78 @@ namespace RgSite.Service
             await _database.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<bool> ClearCartAsync(string userId)
+        {
+            var cartItems = await GetAllAsync(userId);
+
+            if (cartItems == null || cartItems.Count == 0) return false;
+
+            _database.ShoppingCartItems.RemoveRange(cartItems);
+            await _database.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<decimal> GetCartTotalCostAsync(string userId, string role)
+        {
+            decimal total = 0;
+
+            var cartItems = await GetAllAsync(userId);
+
+            if (cartItems == null || cartItems.Count == 0) return total;
+
+            foreach (var item in cartItems)
+            {
+                item.Price = await GetPriceForCartItem(item.PriceId, role);
+                total += item.Price.Cost * item.Quantity;
+            }
+
+            return total;
+        }
+
+        public async Task<Price> GetPriceForCartItem(int priceId, string role)
+        {
+            Price price = null;
+
+            if (role == RoleName.Customer || role == RoleName.Admin)
+            {
+                var customerPrices = await productService.GetCustomerPrices();
+                price = customerPrices.Select(p => new Price
+                {
+                    Id = p.Id,
+                    Size = p.Size,
+                    Cost = p.Cost
+                }).FirstOrDefault(p => p.Id == priceId);
+            }
+            else
+            {
+                var salonPrices = await productService.GetSalonPrices();
+                price = salonPrices.Select(p => new Price
+                {
+                    Id = p.Id,
+                    Size = p.Size,
+                    Cost = p.Cost
+                }).FirstOrDefault(p => p.Id == priceId);
+            }
+
+            return price;
+        }
+
+        public async Task<decimal> GetCartTotalCostWithShippingAsync(string userId)
+        {
+            throw new NotImplementedException();
+            //decimal total = 0;
+
+            //var cartItems = await GetAllAsync(userId);
+            ////var shippingCosts = 
+
+            //if (cartItems == null || cartItems.Count == 0) return total;
+
+            //cartItems.ForEach(i => total += i.Price.Cost * i.Quantity);
+
+            //return total * shippingCosts;
         }
     }
 }

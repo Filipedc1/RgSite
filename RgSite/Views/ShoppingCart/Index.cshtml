@@ -1,0 +1,50 @@
+﻿@model RgSite.ViewModels.ShoppingCartViewModel
+
+
+
+<div class="container">
+
+    <!--Members Table-->
+    <div id="shopping-cart">
+        <div id="shoppingcart-table">
+            <table class="table table-condensed" id="memberIndexTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>PRODUCT</th>
+                        <th>PRICE</th>
+                        <th>QUANTITY</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <tr class="item-row">
+                            <td class="">
+                                <a asp-controller="Products" asp-action="ProductDetail" asp-route-id="@item.Id">
+                                    <div class="item-image" style="background-image: url(@item.ImageUrl)"></div>
+                                </a>
+                            </td>
+                            <td class="">@item.Name</td>
+                            <td class="">@item.Price.Cost</td>
+                            <td class="">@item.Quantity</td>
+                            <td class="">@item.Total</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .container {
+        padding-top: 15px;
+    }
+
+
+
+
+</style>

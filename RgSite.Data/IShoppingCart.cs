@@ -8,11 +8,15 @@ namespace RgSite.Data
 {
     public interface IShoppingCart
     {
-        Task<IEnumerable<CartItem>> GetAllAsync();
-        Task<CartItem> GetByIdAsync(int id);
+        Task<List<CartItem>> GetAllAsync(string userId);
+        Task<CartItem> GetByIdAsync(int itemId);
         Task<bool> AddItemAsync(CartItem item);
         Task<bool> DeleteItemAsync(CartItem item);
         Task<bool> IsInCartAsync(int itemId);
         Task<bool> UpdateQuantityAsync(int itemId);
+        Task<bool> ClearCartAsync(string userId);
+        Task<decimal> GetCartTotalCostAsync(string userId, string role);
+        Task<decimal> GetCartTotalCostWithShippingAsync(string userId);
+        Task<Price> GetPriceForCartItem(int priceId, string role);
     }
 }

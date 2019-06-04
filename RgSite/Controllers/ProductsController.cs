@@ -87,7 +87,7 @@ namespace RgSite.Controllers
 
             var product = new Product();
 
-            if (role == RoleName.Customer)
+            if (role == RoleName.Customer || role == RoleName.Admin)
                 product = await productService.GetProductForCustomerByIdAsync(id);
             else
                 product = await productService.GetProductForSalonByIdAsync(id);

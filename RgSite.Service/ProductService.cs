@@ -125,7 +125,7 @@ namespace RgSite.Service
         {
             var prices = new List<Price>();
 
-            if (role == RoleName.Customer)
+            if (role == RoleName.Customer || role == RoleName.Admin)
             {
                 var results = product.CustomerPrices.Select(p => new Price
                 {
@@ -149,6 +149,16 @@ namespace RgSite.Service
             }
 
             return prices;
+        }
+
+        public async Task<List<CustomerPrice>> GetCustomerPrices()
+        {
+            return await _database.CustomerPrices.ToListAsync();
+        }
+
+        public async Task<List<SalonPrice>> GetSalonPrices()
+        {
+            return await _database.SalonPrices.ToListAsync();
         }
     }
 }

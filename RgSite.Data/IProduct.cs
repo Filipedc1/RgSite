@@ -22,5 +22,7 @@ namespace RgSite.Data
         Task DeleteProductCollectionAsync(int id);
         string GetProductPriceRange(Product product, string role);
         IEnumerable<Price> GetPrices(Product product, string role);
+        Task<List<CustomerPrice>> GetCustomerPrices();
+        Task<List<SalonPrice>> GetSalonPrices();
     }
 }
