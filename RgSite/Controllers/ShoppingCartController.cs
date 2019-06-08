@@ -40,7 +40,7 @@ namespace RgSite.Controllers
             var items = cartItems.Select(item => new CartItemViewModel
             {
                 Id = item.Id,
-                Name = item.Name,
+                Name = item.Name.ToUpper(),
                 Description = item.Description,
                 ImageUrl = item.ImageUrl,
                 Quantity = item.Quantity,
@@ -85,9 +85,9 @@ namespace RgSite.Controllers
             var price = productService.GetPrices(product, role)
                                       .FirstOrDefault(p => p.Id == model.Price.Id);
 
-            if (await cartService.IsInCartAsync(model.ProductId))
+            if (await cartService.IsInCartAsync(model.ProductId, price.Id))
             {
-                await cartService.UpdateQuantityAsync(model.ProductId);
+                await cartService.UpdateQuantityAsync(model.ProductId, true);
                 return RedirectToAction("ProductDetail", "Products", new { id = product.ProductId });
             }
             else
@@ -119,6 +119,31 @@ namespace RgSite.Controllers
                 return RedirectToAction("Index");
 
             return BadRequest();
+        }
+
+        // Updates cart when quantity value is modified
+        public async Task<IActionResult> UpdateCart(int productId, int selectedSizeId, string selectedQuantity)
+        {
+            //If user is not logged in, assume Customer role
+            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
+
+            var product = new Product();
+            decimal cost = 0;
+
+            if (role == RoleName.Customer || role == RoleName.Admin)
+                product = await productService.GetProductForCustomerByIdAsync(productId);
+            else
+                product = await productService.GetProductForSalonByIdAsync(productId);
+
+            if (product != null)
+                cost = productService.GetPrices(product, role).FirstOrDefault(p => p.Id == selectedSizeId).Cost;
+
+            int quantity = int.Parse(selectedQuantity);
+            var result = $"${cost * quantity}";
+
+            await cartService.UpdateQuantityAsync(productId, false, quantity);
+
+            return Json(new { price = result });
         }
     }
 }

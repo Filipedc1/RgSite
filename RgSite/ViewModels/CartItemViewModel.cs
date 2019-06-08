@@ -18,7 +18,10 @@ namespace RgSite.ViewModels
         public Price Price          { get; set; }
         public AppUser User         { get; set; }
 
-        public decimal Total =>  Price.Cost * Quantity;
+        public decimal Total        =>  Price.Cost * Quantity;
+        public string DisplayPrice  =>  $"${Price.Cost}";
+        public string DisplayTotal  =>  $"${Total}";
+        public string DisplaySize => Price.Size.ToUpper();
 
     }
 }

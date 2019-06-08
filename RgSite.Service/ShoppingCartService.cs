@@ -57,18 +57,22 @@ namespace RgSite.Service
             return true;
         }
 
-        public async Task<bool> IsInCartAsync(int itemId)
+        public async Task<bool> IsInCartAsync(int itemId, int productSizeId)
         {
-            return await _database.ShoppingCartItems.AnyAsync(item => item.Id == itemId);
+            return await _database.ShoppingCartItems.AnyAsync(item => item.Id == itemId && item.PriceId == productSizeId);
         }
 
-        public async Task<bool> UpdateQuantityAsync(int itemId)
+        public async Task<bool> UpdateQuantityAsync(int itemId, bool isAdd, int quantity = 0)
         {
             var item = await _database.ShoppingCartItems.FirstOrDefaultAsync(i => i.Id == itemId);
 
             if (item == null) return false;
 
-            item.Quantity += 1;
+            if (isAdd)
+                item.Quantity += 1;
+            else
+                item.Quantity = quantity;
+
             await _database.SaveChangesAsync();
 
             return true;

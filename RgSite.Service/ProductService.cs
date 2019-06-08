@@ -105,7 +105,7 @@ namespace RgSite.Service
         {
             string range = string.Empty;
 
-            if (role == RoleName.Customer && product.CustomerPrices != null && product.CustomerPrices.Count() > 0)
+            if ((role == RoleName.Customer || role == RoleName.Admin) && product.CustomerPrices != null && product.CustomerPrices.Count() > 0)
             {
                 range = $"${product.CustomerPrices.FirstOrDefault().Cost} - ${product.CustomerPrices.LastOrDefault().Cost}";
             }

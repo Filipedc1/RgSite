@@ -4,37 +4,45 @@
 
 <div class="container">
 
-    <!--Members Table-->
-    <div id="shopping-cart">
-        <div id="shoppingcart-table">
-            <table class="table table-condensed" id="memberIndexTable">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>PRODUCT</th>
-                        <th>PRICE</th>
-                        <th>QUANTITY</th>
-                        <th>TOTAL</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.CartItems)
-                    {
-                        <tr class="item-row">
-                            <td class="">
-                                <a asp-controller="Products" asp-action="ProductDetail" asp-route-id="@item.Id">
-                                    <div class="item-image" style="background-image: url(@item.ImageUrl)"></div>
-                                </a>
-                            </td>
-                            <td class="">@item.Name</td>
-                            <td class="">@item.Price.Cost</td>
-                            <td class="">@item.Quantity</td>
-                            <td class="">@item.Total</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+    <!--Cart Items Table-->
+    <div class="row table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="item-header">PRODUCT</th>
+                    <th class="item-header">PRICE</th>
+                    <th class="item-header">SIZE</th>
+                    <th class="item-header">QUANTITY</th>
+                    <th class="item-header">TOTAL</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CartItems)
+                {
+                <tr class="item-row">
+                    <td class="">
+                        <a asp-controller="Products" asp-action="ProductDetail" asp-route-id="@item.Id">
+                            <div class="item-image" style="background-image: url(@item.ImageUrl)"></div>
+                        </a>
+                    </td>
+                    <td class="item">@item.Name</td>
+                    <td class="item">@item.DisplayPrice</td>
+                    <td class="item">@item.DisplaySize</td>
+                    <td class="item">
+                        <input id="item-quantity" asp-for="@item.Quantity" onchange="onQuantityChanged(@item.Id, @item.Price.Id)" class="form-control col-sm-4" />
+                    </td>
+                    <td class="item" id="total">@item.DisplayTotal</td>
+                    <td class="item">
+                        <i>
+                            <a id="delete-comment" class="far fa-trash-alt pull-right" role="button" asp-controller="Post" asp-action="DeleteComment" asp-route-id=""></a>
+                        </i>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -44,7 +52,51 @@
         padding-top: 15px;
     }
 
+    .item-image {
+        height: 120px;
+        width: 120px;
+        background-size: 100%;
+    }
 
+    .table {
+        font-family: 'Lato', Arial, sans-serif;
+    }
 
+    .item-header {
+        font-weight: 900 !important;
+    }
 
+    .item {
+        font-size: 18px;
+        font-weight: 600;
+        vertical-align: middle !important;
+    }
+
+    #delete-comment {
+        color: red;
+    }
 </style>
+
+@section scripts
+{
+    <script>
+
+        // On quantity changed, Update Cart in code behind
+        //$('#item-quantity').change(function (e) {
+        //    var selectedSize = $('#item-quantity').text();
+        //    var productId = $('#ProductId').val(); //how to get item id?
+
+        //    $.getJSON('/Products/GetPrice', { productId: productId, selectedSize: selectedSize }, function(json) {
+        //        $('#cost').text(json.price);
+        //    });
+        //});
+
+        function onQuantityChanged(id, sizeId) {
+            var selectedQuantity = $('#item-quantity').val();
+            $.getJSON('/ShoppingCart/UpdateCart', { productId: id, selectedSizeId: sizeId, selectedQuantity: selectedQuantity  }, function(json) {
+                $('#total').text(json.price);
+            });
+        }
+
+    </script>
+}
