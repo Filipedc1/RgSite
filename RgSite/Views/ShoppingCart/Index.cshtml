@@ -81,16 +81,6 @@
 {
     <script>
 
-        // On quantity changed, Update Cart in code behind
-        //$('#item-quantity').change(function (e) {
-        //    var selectedSize = $('#item-quantity').text();
-        //    var productId = $('#ProductId').val(); //how to get item id?
-
-        //    $.getJSON('/Products/GetPrice', { productId: productId, selectedSize: selectedSize }, function(json) {
-        //        $('#cost').text(json.price);
-        //    });
-        //});
-
         function onQuantityChanged(id, sizeId) {
             var selectedQuantity = $('#item-quantity').val();
             $.getJSON('/ShoppingCart/UpdateCart', { productId: id, selectedSizeId: sizeId, selectedQuantity: selectedQuantity  }, function(json) {
