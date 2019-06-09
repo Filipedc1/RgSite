@@ -107,27 +107,26 @@ namespace RgSite.Controllers
             return View(vM);
         }
 
-        //public async Task<IActionResult> GetPrice(int productId, int selectedSizeId, string selectedQuantity)
-        //{
-        //    // If user is not logged in, assume Customer role
-        //    string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
+        public async Task<IActionResult> GetPrice(int productId, string selectedSize)
+        {
+            // If user is not logged in, assume Customer role
+            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
 
-        //    var product = new Product();
-        //    decimal cost = 0;
+            var product = new Product();
+            decimal cost = 0;
 
-        //    if (role == RoleName.Customer || role == RoleName.Admin)
-        //        product = await productService.GetProductForCustomerByIdAsync(productId);
-        //    else
-        //        product = await productService.GetProductForSalonByIdAsync(productId);
+            if (role == RoleName.Customer || role == RoleName.Admin)
+                product = await productService.GetProductForCustomerByIdAsync(productId);
+            else
+                product = await productService.GetProductForSalonByIdAsync(productId);
 
-        //    if (product != null)
-        //        cost = productService.GetPrices(product, role).FirstOrDefault(p => p.Id == selectedSizeId).Cost;
+            if (product != null)
+                cost = productService.GetPrices(product, role).FirstOrDefault(p => p.Size == selectedSize).Cost;
 
-        //    int quantity = int.Parse(selectedQuantity);
-        //    var result = $"${cost * quantity}";
+            var result = $"${cost}";
 
-        //    return Json(new { price = result });
-        //}
+            return Json(new { price = result });
+        }
 
 
         #region Helpers

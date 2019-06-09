@@ -21,25 +21,25 @@
             <tbody>
                 @foreach (var item in Model.CartItems)
                 {
-                <tr class="item-row">
-                    <td class="">
-                        <a asp-controller="Products" asp-action="ProductDetail" asp-route-id="@item.Id">
-                            <div class="item-image" style="background-image: url(@item.ImageUrl)"></div>
-                        </a>
-                    </td>
-                    <td class="item">@item.Name</td>
-                    <td class="item">@item.DisplayPrice</td>
-                    <td class="item">@item.DisplaySize</td>
-                    <td class="item">
-                        <input id="item-quantity" asp-for="@item.Quantity" onchange="onQuantityChanged(@item.Id, @item.Price.Id)" class="form-control col-sm-4" />
-                    </td>
-                    <td class="item" id="total">@item.DisplayTotal</td>
-                    <td class="item">
-                        <i>
-                            <a id="delete-comment" class="far fa-trash-alt pull-right" role="button" asp-controller="Post" asp-action="DeleteComment" asp-route-id=""></a>
-                        </i>
-                    </td>
-                </tr>
+                    <tr class="item-row">
+                        <td class="">
+                            <a asp-controller="Products" asp-action="ProductDetail" asp-route-id="@item.Id">
+                                <div class="item-image" style="background-image: url(@item.ImageUrl)"></div>
+                            </a>
+                        </td>
+                        <td class="item">@item.Name</td>
+                        <td class="item">@item.DisplayPrice</td>
+                        <td class="item">@item.DisplaySize</td>
+                        <td class="item">
+                            <input id="item-quantity" asp-for="@item.Quantity" onchange="onQuantityChanged(@item.Id, @item.Price.Id)" class="form-control col-sm-4" />
+                        </td>
+                        <td class="item" id="total">@item.DisplayTotal</td>
+                        <td class="item">
+                            <i>
+                                <a id="delete-item" class="far fa-trash-alt pull-right" role="button" onclick="onDelete(event, @item.Id)" asp-controller="ShoppingCart" asp-action="RemoveFromCart" asp-route-id="@item.Id"></a>
+                            </i>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -72,7 +72,7 @@
         vertical-align: middle !important;
     }
 
-    #delete-comment {
+    #delete-item {
         color: red;
     }
 </style>
@@ -86,6 +86,29 @@
             $.getJSON('/ShoppingCart/UpdateCart', { productId: id, selectedSizeId: sizeId, selectedQuantity: selectedQuantity  }, function(json) {
                 $('#total').text(json.price);
             });
+        }
+
+        // Need to pass itemId here because for some reason if you dont, the the id of the first item in the cart is always passed.
+       // if you dont show a popup, then the correct id is passed to the action in the controller
+        function onDelete(e, itemId) {
+            e.preventDefault();
+
+            var tempUrl = $("#delete-item").attr('href');
+            var url = tempUrl.replace(/\d+/g, itemId);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Item will be permanently removed.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = url;
+                }
+            })
         }
 
     </script>
