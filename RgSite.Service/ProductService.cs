@@ -34,24 +34,15 @@ namespace RgSite.Service
         {
             return await _database.Products
                                   .Include(p => p.CollectionProducts)
-                                  .Include(p => p.CustomerPrices)
-                                  .Include(p => p.SalonPrices)
+                                  .Include(p => p.Prices)
                                   .ToListAsync();
         }
 
-        public async Task<Product> GetProductForCustomerByIdAsync(int id)
+        public async Task<Product> GetProductByIdAsync(int id)
         {
             return await _database.Products
                                   .Include(p => p.CollectionProducts)
-                                  .Include(p => p.CustomerPrices)
-                                  .FirstOrDefaultAsync(p => p.ProductId == id);
-        }
-
-        public async Task<Product> GetProductForSalonByIdAsync(int id)
-        {
-            return await _database.Products
-                                  .Include(p => p.CollectionProducts)
-                                  .Include(p => p.SalonPrices)
+                                  .Include(p => p.Prices)
                                   .FirstOrDefaultAsync(p => p.ProductId == id);
         }
 
@@ -65,53 +56,36 @@ namespace RgSite.Service
             throw new NotImplementedException();
         }
 
-        public async Task<List<ProductCollection>> GetAllProductCollectionsForCustomersAsync()
+        public async Task<List<ProductCollection>> GetAllProductCollectionsAsync()
         {
             return await _database.ProductCollections
                                   .Include(p => p.CollectionProducts)
                                     .ThenInclude(p => p.Product)
-                                        .ThenInclude(p => p.CustomerPrices)
+                                        .ThenInclude(p => p.Prices)
                                   .ToListAsync();
         }
 
-        public async Task<List<ProductCollection>> GetAllProductCollectionsForSalonsAsync()
+        public async Task<ProductCollection> GetProductCollectionByIdAsync(int id)
         {
             return await _database.ProductCollections
                                   .Include(p => p.CollectionProducts)
                                     .ThenInclude(p => p.Product)
-                                        .ThenInclude(p => p.SalonPrices)
-                                  .ToListAsync();
-        }
-
-        public async Task<ProductCollection> GetProductCollectionForCustomersByIdAsync(int id)
-        {
-            return await _database.ProductCollections
-                                  .Include(p => p.CollectionProducts)
-                                    .ThenInclude(p => p.Product)
-                                        .ThenInclude(p => p.CustomerPrices)
+                                        .ThenInclude(p => p.Prices)
                                   .FirstOrDefaultAsync(p => p.ProductCollectionId == id);
         }
 
-        public async Task<ProductCollection> GetProductCollectionForSalonsByIdAsync(int id)
-        {
-            return await _database.ProductCollections
-                                  .Include(p => p.CollectionProducts)
-                                    .ThenInclude(p => p.Product)
-                                        .ThenInclude(p => p.SalonPrices)
-                                  .FirstOrDefaultAsync(p => p.ProductCollectionId == id);
-        }
 
         public string GetProductPriceRange(Product product, string role)
         {
             string range = string.Empty;
 
-            if ((role == RoleName.Customer || role == RoleName.Admin) && product.CustomerPrices != null && product.CustomerPrices.Count() > 0)
+            if ((role == RoleName.Customer || role == RoleName.Admin) && product.Prices != null && product.Prices.Count() > 0)
             {
-                range = $"${product.CustomerPrices.FirstOrDefault().Cost} - ${product.CustomerPrices.LastOrDefault().Cost}";
+                range = $"${product.Prices.FirstOrDefault().CustomerCost} - ${product.Prices.LastOrDefault().CustomerCost}";
             }
-            else if (role == RoleName.Salon && product.SalonPrices != null && product.SalonPrices.Count() > 0)
+            else if (role == RoleName.Salon && product.Prices != null && product.Prices.Count() > 0)
             {
-                range = $"${product.SalonPrices.FirstOrDefault()} - ${product.SalonPrices.LastOrDefault()}";
+                range = $"${product.Prices.FirstOrDefault().SalonCost} - ${product.Prices.LastOrDefault().SalonCost}";
             }
             else
             {
@@ -127,22 +101,24 @@ namespace RgSite.Service
 
             if (role == RoleName.Customer || role == RoleName.Admin)
             {
-                var results = product.CustomerPrices.Select(p => new Price
+                var results = product.Prices.Select(p => new Price
                 {
                     Id = p.Id,
                     Size = p.Size,
-                    Cost = p.Cost
+                    CustomerCost = p.CustomerCost,
+                    isCustomer = true
                 }).ToList();
 
                 prices.AddRange(results);
             }
             else if (role == RoleName.Salon)
             {
-                var results = product.SalonPrices.Select(p => new Price
+                var results = product.Prices.Select(p => new Price
                 {
                     Id = p.Id,
                     Size = p.Size,
-                    Cost = p.Cost
+                    SalonCost = p.SalonCost,
+                    isCustomer = false
                 }).ToList();
 
                 prices.AddRange(results);
@@ -151,14 +127,9 @@ namespace RgSite.Service
             return prices;
         }
 
-        public async Task<List<CustomerPrice>> GetCustomerPrices()
+        public async Task<List<Price>> GetPrices()
         {
-            return await _database.CustomerPrices.ToListAsync();
-        }
-
-        public async Task<List<SalonPrice>> GetSalonPrices()
-        {
-            return await _database.SalonPrices.ToListAsync();
+            return await _database.Prices.ToListAsync();
         }
     }
 }

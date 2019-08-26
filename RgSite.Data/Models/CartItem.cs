@@ -14,9 +14,9 @@ namespace RgSite.Data.Models
         public string ImageUrl          { get; set; }
         public int Quantity             { get; set; }
 
-        [NotMapped]
+        //[NotMapped]
         public Price Price              { get; set; }
-        public int PriceId              { get; set; }
+        //public int PriceId              { get; set; }
 
         public virtual AppUser User     { get; set; }
     }

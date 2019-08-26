@@ -14,8 +14,7 @@ namespace RgSite.Data
         public DbSet<Salon> Salons                          { get; set; }
         public DbSet<Product> Products                      { get; set; }
         public DbSet<ProductCollection> ProductCollections  { get; set; }
-        public DbSet<CustomerPrice> CustomerPrices          { get; set; }
-        public DbSet<SalonPrice> SalonPrices                { get; set; }
+        public DbSet<Price> Prices                          { get; set; }
         public DbSet<CartItem> ShoppingCartItems            { get; set; }
 
 

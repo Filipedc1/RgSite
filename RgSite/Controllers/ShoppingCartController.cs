@@ -75,12 +75,7 @@ namespace RgSite.Controllers
             string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
             var user = await userService.GetCurrentUser();
 
-            var product = new Product();
-
-            if (role == RoleName.Customer || role == RoleName.Admin)
-                product = await productService.GetProductForCustomerByIdAsync(model.ProductId);
-            else
-                product = await productService.GetProductForSalonByIdAsync(model.ProductId);
+            var product = await productService.GetProductByIdAsync(model.ProductId);
 
             var price = productService.GetPrices(product, role)
                                       .FirstOrDefault(p => p.Id == model.Price.Id);
@@ -100,7 +95,6 @@ namespace RgSite.Controllers
                     ImageUrl = product.ImageUrl,
                     Quantity = model.Quantity,
                     Price = price,
-                    PriceId = price.Id,
                     User = user
                 };
 
@@ -127,13 +121,8 @@ namespace RgSite.Controllers
             //If user is not logged in, assume Customer role
             string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
 
-            var product = new Product();
+            var product = await productService.GetProductByIdAsync(productId);
             decimal cost = 0;
-
-            if (role == RoleName.Customer || role == RoleName.Admin)
-                product = await productService.GetProductForCustomerByIdAsync(productId);
-            else
-                product = await productService.GetProductForSalonByIdAsync(productId);
 
             if (product != null)
                 cost = productService.GetPrices(product, role).FirstOrDefault(p => p.Id == selectedSizeId).Cost;

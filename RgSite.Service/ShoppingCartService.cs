@@ -59,7 +59,7 @@ namespace RgSite.Service
 
         public async Task<bool> IsInCartAsync(int itemId, int productSizeId)
         {
-            return await _database.ShoppingCartItems.AnyAsync(item => item.Id == itemId && item.PriceId == productSizeId);
+            return await _database.ShoppingCartItems.AnyAsync(item => item.Id == itemId && item.Price.Id == productSizeId);
         }
 
         public async Task<bool> UpdateQuantityAsync(int itemId, bool isAdd, int quantity = 0)
@@ -100,7 +100,7 @@ namespace RgSite.Service
 
             foreach (var item in cartItems)
             {
-                item.Price = await GetPriceForCartItem(item.PriceId, role);
+                item.Price = await GetPriceForCartItem(item.Price.Id, role);
                 total += item.Price.Cost * item.Quantity;
             }
 
@@ -113,22 +113,24 @@ namespace RgSite.Service
 
             if (role == RoleName.Customer || role == RoleName.Admin)
             {
-                var customerPrices = await productService.GetCustomerPrices();
-                price = customerPrices.Select(p => new Price
+                var prices = await productService.GetPrices();
+                price = prices.Select(p => new Price
                 {
                     Id = p.Id,
                     Size = p.Size,
-                    Cost = p.Cost
+                    CustomerCost = p.CustomerCost,
+                    isCustomer = true
                 }).FirstOrDefault(p => p.Id == priceId);
             }
             else
             {
-                var salonPrices = await productService.GetSalonPrices();
-                price = salonPrices.Select(p => new Price
+                var prices = await productService.GetPrices();
+                price = prices.Select(p => new Price
                 {
                     Id = p.Id,
                     Size = p.Size,
-                    Cost = p.Cost
+                    SalonCost = p.SalonCost,
+                    isCustomer = false
                 }).FirstOrDefault(p => p.Id == priceId);
             }
 
