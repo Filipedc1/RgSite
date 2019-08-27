@@ -14,10 +14,7 @@ namespace RgSite.Data
         public decimal SalonCost        { get; set; }
 
         [NotMapped]
-        public decimal Cost => isCustomer ? CustomerCost : SalonCost;
-
-        [NotMapped]
-        public bool isCustomer { get; set; }
+        public decimal Cost             { get; set; }
 
         public virtual Product Product  { get; set; }
     }

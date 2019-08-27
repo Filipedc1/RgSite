@@ -26,6 +26,7 @@ namespace RgSite.Service
         {
             return await _database.ShoppingCartItems
                                   .Include(i => i.User)
+                                  .Include(i => i.Price)
                                   .Where(i => i.User.Id == userId)
                                   .ToListAsync();
         }
@@ -34,6 +35,7 @@ namespace RgSite.Service
         {
             return await _database.ShoppingCartItems
                                   .Include(i => i.User)
+                                  .Include(i => i.Price)
                                   .FirstOrDefaultAsync(i => i.Id == itemId);
         }
 
@@ -90,51 +92,17 @@ namespace RgSite.Service
             return true;
         }
 
-        public async Task<decimal> GetCartTotalCostAsync(string userId, string role)
+        public async Task<decimal> GetCartTotalCostAsync(string userId, string role, List<CartItem> cartItems)
         {
             decimal total = 0;
 
-            var cartItems = await GetAllAsync(userId);
-
-            if (cartItems == null || cartItems.Count == 0) return total;
-
             foreach (var item in cartItems)
             {
-                item.Price = await GetPriceForCartItem(item.Price.Id, role);
+                item.Price.Cost = (role == RoleName.Customer || role == RoleName.Admin) ? item.Price.CustomerCost : item.Price.SalonCost;
                 total += item.Price.Cost * item.Quantity;
             }
 
             return total;
-        }
-
-        public async Task<Price> GetPriceForCartItem(int priceId, string role)
-        {
-            Price price = null;
-
-            if (role == RoleName.Customer || role == RoleName.Admin)
-            {
-                var prices = await productService.GetPrices();
-                price = prices.Select(p => new Price
-                {
-                    Id = p.Id,
-                    Size = p.Size,
-                    CustomerCost = p.CustomerCost,
-                    isCustomer = true
-                }).FirstOrDefault(p => p.Id == priceId);
-            }
-            else
-            {
-                var prices = await productService.GetPrices();
-                price = prices.Select(p => new Price
-                {
-                    Id = p.Id,
-                    Size = p.Size,
-                    SalonCost = p.SalonCost,
-                    isCustomer = false
-                }).FirstOrDefault(p => p.Id == priceId);
-            }
-
-            return price;
         }
 
         public async Task<decimal> GetCartTotalCostWithShippingAsync(string userId)

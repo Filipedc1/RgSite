@@ -55,9 +55,9 @@ namespace RgSite.Service
         public async Task<string> GetCurrentUserRole()
         {
             var user = await GetCurrentUser();
-            var role = await userManager.GetRolesAsync(user);
+            var roles = await userManager.GetRolesAsync(user);
 
-            return role.FirstOrDefault();
+            return roles.FirstOrDefault();
         }
 
         public string GetCurrentUserName()

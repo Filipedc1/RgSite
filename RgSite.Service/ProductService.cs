@@ -95,38 +95,6 @@ namespace RgSite.Service
             return range;
         }
 
-        public IEnumerable<Price> GetPrices(Product product, string role)
-        {
-            var prices = new List<Price>();
-
-            if (role == RoleName.Customer || role == RoleName.Admin)
-            {
-                var results = product.Prices.Select(p => new Price
-                {
-                    Id = p.Id,
-                    Size = p.Size,
-                    CustomerCost = p.CustomerCost,
-                    isCustomer = true
-                }).ToList();
-
-                prices.AddRange(results);
-            }
-            else if (role == RoleName.Salon)
-            {
-                var results = product.Prices.Select(p => new Price
-                {
-                    Id = p.Id,
-                    Size = p.Size,
-                    SalonCost = p.SalonCost,
-                    isCustomer = false
-                }).ToList();
-
-                prices.AddRange(results);
-            }
-
-            return prices;
-        }
-
         public async Task<List<Price>> GetPrices()
         {
             return await _database.Prices.ToListAsync();

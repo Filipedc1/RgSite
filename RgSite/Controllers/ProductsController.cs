@@ -93,7 +93,6 @@ namespace RgSite.Controllers
                 ImageUrl = product.ImageUrl,
                 Prices = product.Prices,
                 PriceRange = productService.GetProductPriceRange(product, role),
-                //Prices = productService.GetPrices(product, role)
             };
 
             return View(vM);
@@ -108,9 +107,12 @@ namespace RgSite.Controllers
             decimal cost = 0;
 
             if (product != null)
-                cost = productService.GetPrices(product, role).FirstOrDefault(p => p.Size == selectedSize).Cost;
+            {
+                var price = product.Prices.FirstOrDefault(p => p.Size == selectedSize);
+                cost = (role == RoleName.Customer || role == RoleName.Admin) ? price.CustomerCost : price.SalonCost;
+            }
 
-            var result = $"${cost}";
+            string result = $"${cost}";
 
             return Json(new { price = result });
         }

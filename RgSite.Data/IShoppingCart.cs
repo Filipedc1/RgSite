@@ -15,8 +15,7 @@ namespace RgSite.Data
         Task<bool> IsInCartAsync(int itemId, int productSizeId);
         Task<bool> UpdateQuantityAsync(int itemId, bool isAdd, int quantity = 0);
         Task<bool> ClearCartAsync(string userId);
-        Task<decimal> GetCartTotalCostAsync(string userId, string role);
+        Task<decimal> GetCartTotalCostAsync(string userId, string role, List<CartItem> cartItems);
         Task<decimal> GetCartTotalCostWithShippingAsync(string userId);
-        Task<Price> GetPriceForCartItem(int priceId, string role);
     }
 }

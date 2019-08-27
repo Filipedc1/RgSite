@@ -33,9 +33,11 @@ namespace RgSite.Controllers
         {
             string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            decimal subTotal = 0;
 
             var cartItems = await cartService.GetAllAsync(userId);
-            var subTotal = await cartService.GetCartTotalCostAsync(userId, role);
+            if (cartItems != null)
+                subTotal = await cartService.GetCartTotalCostAsync(userId, role, cartItems);
 
             var items = cartItems.Select(item => new CartItemViewModel
             {
@@ -76,9 +78,10 @@ namespace RgSite.Controllers
             var user = await userService.GetCurrentUser();
 
             var product = await productService.GetProductByIdAsync(model.ProductId);
+            var price = product.Prices.FirstOrDefault(p => p.Id == model.Price.Id);
 
-            var price = productService.GetPrices(product, role)
-                                      .FirstOrDefault(p => p.Id == model.Price.Id);
+            if (product == null || price == null)
+                return BadRequest();
 
             if (await cartService.IsInCartAsync(model.ProductId, price.Id))
             {
@@ -109,6 +112,8 @@ namespace RgSite.Controllers
         {
             var item = await cartService.GetByIdAsync(id);
 
+            if (item == null) return BadRequest();
+
             if (await cartService.DeleteItemAsync(item))
                 return RedirectToAction("Index");
 
@@ -125,10 +130,13 @@ namespace RgSite.Controllers
             decimal cost = 0;
 
             if (product != null)
-                cost = productService.GetPrices(product, role).FirstOrDefault(p => p.Id == selectedSizeId).Cost;
+            {
+                var price = product.Prices.FirstOrDefault(p => p.Id == selectedSizeId);
+                cost = (role == RoleName.Customer || role == RoleName.Admin) ? price.CustomerCost : price.SalonCost;
+            }
 
             int quantity = int.Parse(selectedQuantity);
-            var result = $"${cost * quantity}";
+            string result = $"${cost * quantity}";
 
             await cartService.UpdateQuantityAsync(productId, false, quantity);
 
