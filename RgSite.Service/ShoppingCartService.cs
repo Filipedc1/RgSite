@@ -92,7 +92,7 @@ namespace RgSite.Service
             return true;
         }
 
-        public async Task<decimal> GetCartTotalCostAsync(string userId, string role, List<CartItem> cartItems)
+        public decimal GetCartTotalCostAsync(string userId, string role, List<CartItem> cartItems)
         {
             decimal total = 0;
 
@@ -105,19 +105,14 @@ namespace RgSite.Service
             return total;
         }
 
-        public async Task<decimal> GetCartTotalCostWithShippingAsync(string userId)
+        public async Task<IEnumerable<State>> GetStatesAsync()
         {
-            throw new NotImplementedException();
-            //decimal total = 0;
+            return await _database.States.ToListAsync();
+        }
 
-            //var cartItems = await GetAllAsync(userId);
-            ////var shippingCosts = 
-
-            //if (cartItems == null || cartItems.Count == 0) return total;
-
-            //cartItems.ForEach(i => total += i.Price.Cost * i.Quantity);
-
-            //return total * shippingCosts;
+        public async Task<State> GetStateByIdAsync(int id)
+        {
+            return await _database.States.FirstOrDefaultAsync(s => s.Id == id);
         }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RgSite.Data;
 
 namespace RgSite.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190831191852_AddStateModelAndDbSet")]
+    partial class AddStateModelAndDbSet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,39 +231,6 @@ namespace RgSite.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("RgSite.Data.Models.BillingDetail", b =>
-                {
-                    b.Property<int>("BillingDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AddressId");
-
-                    b.Property<string>("CompanyName");
-
-                    b.Property<string>("Email")
-                        .IsRequired();
-
-                    b.Property<string>("FirstName")
-                        .IsRequired();
-
-                    b.Property<bool>("IsResidential");
-
-                    b.Property<string>("LastName")
-                        .IsRequired();
-
-                    b.Property<string>("OrderNotes");
-
-                    b.Property<string>("Phone")
-                        .IsRequired();
-
-                    b.HasKey("BillingDetailId");
-
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("BillingDetails");
-                });
-
             modelBuilder.Entity("RgSite.Data.Models.CartItem", b =>
                 {
                     b.Property<int>("Id")
@@ -302,58 +271,6 @@ namespace RgSite.Data.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("CollectionProducts");
-                });
-
-            modelBuilder.Entity("RgSite.Data.Models.Order", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("BillingDetailId");
-
-                    b.Property<DateTime>("Placed");
-
-                    b.Property<decimal>("Total");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("OrderId");
-
-                    b.HasIndex("BillingDetailId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("RgSite.Data.Models.OrderDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("OrderId");
-
-                    b.Property<decimal>("ProductCost");
-
-                    b.Property<int>("ProductId");
-
-                    b.Property<string>("ProductName");
-
-                    b.Property<int?>("ProductPriceId");
-
-                    b.Property<int>("ProductQuantity");
-
-                    b.Property<string>("ProductSize");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductPriceId");
-
-                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("RgSite.Data.Models.Product", b =>
@@ -503,14 +420,6 @@ namespace RgSite.Data.Migrations
                         .HasForeignKey("SalonId");
                 });
 
-            modelBuilder.Entity("RgSite.Data.Models.BillingDetail", b =>
-                {
-                    b.HasOne("RgSite.Data.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("RgSite.Data.Models.CartItem", b =>
                 {
                     b.HasOne("RgSite.Data.Price", "Price")
@@ -533,28 +442,6 @@ namespace RgSite.Data.Migrations
                         .WithMany("CollectionProducts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("RgSite.Data.Models.Order", b =>
-                {
-                    b.HasOne("RgSite.Data.Models.BillingDetail", "BillingDetail")
-                        .WithMany()
-                        .HasForeignKey("BillingDetailId");
-
-                    b.HasOne("RgSite.Data.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("RgSite.Data.Models.OrderDetail", b =>
-                {
-                    b.HasOne("RgSite.Data.Models.Order", "Order")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId");
-
-                    b.HasOne("RgSite.Data.Price", "ProductPrice")
-                        .WithMany()
-                        .HasForeignKey("ProductPriceId");
                 });
 
             modelBuilder.Entity("RgSite.Data.Models.Salon", b =>

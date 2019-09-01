@@ -50,6 +50,7 @@ namespace RgSite
             services.AddScoped<IAppUser, AppUserService>();
             services.AddScoped<IProduct, ProductService>();
             services.AddScoped<IShoppingCart, ShoppingCartService>();
+            services.AddScoped<IOrder, OrderService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

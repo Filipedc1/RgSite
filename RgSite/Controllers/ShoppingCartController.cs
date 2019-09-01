@@ -17,14 +17,16 @@ namespace RgSite.Controllers
         private readonly IProduct productService;
         private readonly IShoppingCart cartService;
         private readonly IAppUser userService;
+        private readonly IOrder orderService;
 
         #region Constructor
 
-        public ShoppingCartController(IProduct productService, IShoppingCart cartService, IAppUser userService)
+        public ShoppingCartController(IProduct productService, IShoppingCart cartService, IAppUser userService, IOrder orderService)
         {
             this.productService = productService;
             this.userService = userService;
             this.cartService = cartService;
+            this.orderService = orderService;
         }
 
         #endregion
@@ -37,11 +39,12 @@ namespace RgSite.Controllers
 
             var cartItems = await cartService.GetAllAsync(userId);
             if (cartItems != null)
-                subTotal = await cartService.GetCartTotalCostAsync(userId, role, cartItems);
+                subTotal = cartService.GetCartTotalCostAsync(userId, role, cartItems);
 
             var items = cartItems.Select(item => new CartItemViewModel
             {
                 Id = item.Id,
+                ProductId = item.ProductId,
                 Name = item.Name.ToUpper(),
                 Description = item.Description,
                 ImageUrl = item.ImageUrl,
@@ -56,7 +59,7 @@ namespace RgSite.Controllers
                 CartItems = items,
                 SubTotal = subTotal,
                 Total = subTotal,
-                NumOfItems = cartItems.Count
+                User = items.FirstOrDefault().User
             };
 
             return View(vM);
@@ -120,8 +123,130 @@ namespace RgSite.Controllers
             return BadRequest();
         }
 
+        public async Task<IActionResult> Checkout(string id)
+        {
+            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
+            string userId = id;
+            decimal subTotal = 0;
+
+            var cartItems = await cartService.GetAllAsync(userId);
+            if (cartItems != null)
+                subTotal = cartService.GetCartTotalCostAsync(userId, role, cartItems);
+
+            var items = cartItems.Select(item => new CartItemViewModel
+            {
+                Id = item.Id,
+                ProductId = item.ProductId,
+                Name = item.Name.ToUpper(),
+                Description = item.Description,
+                ImageUrl = item.ImageUrl,
+                Quantity = item.Quantity,
+                Price = item.Price,
+                User = item.User
+            })
+            .ToList();
+
+            var cart = new ShoppingCartViewModel
+            {
+                CartItems = items,
+                SubTotal = subTotal,
+                Total = subTotal,
+                User = items.FirstOrDefault().User
+            };
+
+            var vM = new CheckoutFormViewModel
+            {
+                ShoppingCart = cart,
+                States = await cartService.GetStatesAsync()
+            };
+
+            return View("CheckoutForm", vM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PlaceOrder(CheckoutFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                //var errors = ModelState.Values.SelectMany(v => v.Errors).ToList();
+                return RedirectToAction("Checkout");
+            }
+
+            var paymentDetail = new PaymentDetail
+            {
+                PaymentDetailId = model.PaymentDetail.PaymentDetailId,
+                CardOwnerName = model.PaymentDetail.CardOwnerName,
+                CardNumber = model.PaymentDetail.CardNumber,
+                Expiration = model.PaymentDetail.Expiration,
+                CVV = model.PaymentDetail.CVV,
+                CardType = model.PaymentDetail.CardType
+            };
+
+            var billingDetail = new BillingDetail
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Address = await BuildAddressModel(model.Address),
+                Email = model.Email,
+                Phone = model.Phone,
+                IsResidential = model.IsResidential,
+                CompanyName = model.CompanyName,
+                OrderNotes = model.OrderNotes
+            };
+
+            var user = await userService.GetCurrentUser();
+            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
+            decimal subTotal = 0;
+            decimal total = 0;
+
+            var cartItems = await cartService.GetAllAsync(user.Id);
+            if (cartItems != null)
+                subTotal = cartService.GetCartTotalCostAsync(user.Id, role, cartItems);
+
+            // need calculate total with shipping
+            // For now skip it.
+            total = subTotal;
+
+            //need to check if shiptodifferentaddress is true, if so, use the ShippingFormViewModel property
+
+
+            var order = new Order
+            {
+                Total = total,
+                Placed = DateTime.Now,
+                BillingDetail = billingDetail,
+                User = user
+            };
+
+            var orderDetails = cartItems.Select(item => new OrderDetail
+            {
+                ProductId = item.ProductId,
+                ProductName = item.Name,
+                ProductQuantity = item.Quantity,
+                ProductPrice = item.Price,
+                ProductSize = item.Price.Size,
+                ProductCost = item.Price.Cost,
+                Order = order
+            })
+            .ToList();
+
+            // need to process payment
+
+
+
+            if (await orderService.AddOrderAsync(order, orderDetails))
+            {
+                // empty out shoppingcart once order is completed
+                //await cartService.ClearCartAsync(user.Id);
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            return BadRequest();
+        }
+
         // Updates cart when quantity value is modified
-        public async Task<IActionResult> UpdateCart(int productId, int selectedSizeId, string selectedQuantity)
+        public async Task<IActionResult> UpdateCart(int itemId, int productId, int selectedSizeId, string selectedQuantity)
         {
             //If user is not logged in, assume Customer role
             string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
@@ -138,9 +263,28 @@ namespace RgSite.Controllers
             int quantity = int.Parse(selectedQuantity);
             string result = $"${cost * quantity}";
 
-            await cartService.UpdateQuantityAsync(productId, false, quantity);
+            await cartService.UpdateQuantityAsync(itemId, false, quantity);
 
             return Json(new { price = result });
         }
+
+        #region Helpers
+
+        private async Task<Address> BuildAddressModel(AddressViewModel addressVM)
+        {
+            var state = await cartService.GetStateByIdAsync(addressVM.State.Id);
+
+            return new Address
+            {
+                Id = addressVM.Id,
+                Street = addressVM.Street,
+                City = addressVM.City,
+                State = state.Name,
+                Zip = addressVM.Zip
+            };
+        }
+
+        #endregion
+
     }
 }
