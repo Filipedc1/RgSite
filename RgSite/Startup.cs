@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RgSite.Data.Models;
 using RgSite.Service;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace RgSite
 {
@@ -51,6 +52,7 @@ namespace RgSite
             services.AddScoped<IProduct, ProductService>();
             services.AddScoped<IShoppingCart, ShoppingCartService>();
             services.AddScoped<IOrder, OrderService>();
+            services.AddTransient<IEmailSender, EmailService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

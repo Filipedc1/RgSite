@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using RgSite.Data;
 using RgSite.Data.Models;
@@ -18,15 +19,18 @@ namespace RgSite.Controllers
         private readonly IShoppingCart cartService;
         private readonly IAppUser userService;
         private readonly IOrder orderService;
+        private readonly IEmailSender emailService;
 
         #region Constructor
 
-        public ShoppingCartController(IProduct productService, IShoppingCart cartService, IAppUser userService, IOrder orderService)
+        public ShoppingCartController(IProduct productService, IShoppingCart cartService, IAppUser userService, 
+                                      IOrder orderService, IEmailSender emailService)
         {
             this.productService = productService;
             this.userService = userService;
             this.cartService = cartService;
             this.orderService = orderService;
+            this.emailService = emailService;
         }
 
         #endregion
@@ -207,7 +211,7 @@ namespace RgSite.Controllers
             // For now skip it.
             total = subTotal;
 
-            //need to check if shiptodifferentaddress is true, if so, use the ShippingFormViewModel property
+            //need to check if shiptodifferentaddress is true, if so, use the ShippingFormViewModel property. SKIP this
 
 
             var order = new Order
@@ -233,16 +237,17 @@ namespace RgSite.Controllers
             // need to process payment
 
 
-
             if (await orderService.AddOrderAsync(order, orderDetails))
             {
+                await emailService.SendEmailAsync(model.Email, "Your Order Confirmation", "Please login to your account to view your orders");
+
                 // empty out shoppingcart once order is completed
                 //await cartService.ClearCartAsync(user.Id);
 
-                return RedirectToAction("Index", "Home");
+                return View("Success");
             }
 
-            return BadRequest();
+            return View("Error");
         }
 
         // Updates cart when quantity value is modified
