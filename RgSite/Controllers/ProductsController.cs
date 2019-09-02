@@ -30,7 +30,10 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var collections = await productService.GetAllProductCollectionsForCustomersAsync();
+            var collections = await productService.GetAllProductCollectionsAsync();
+
+            if (collections == null || collections.Count == 0)
+                return BadRequest();
 
             var reorderedCollections = ReorderCollectionsForProductsPage(collections);
 
@@ -47,13 +50,8 @@ namespace RgSite.Controllers
             // If user is not logged in, assume Customer role
             string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
 
-            var collection = new ProductCollection();
-
-            if (role == RoleName.Customer)
-                collection = await productService.GetProductCollectionForCustomersByIdAsync(id);
-            else
-                collection = await productService.GetProductCollectionForSalonsByIdAsync(id);
-
+            var collection = await productService.GetProductCollectionByIdAsync(id);
+            if (collection == null) return BadRequest();
 
             var products = collection.CollectionProducts
                                      .Select(prod => new ProductViewModel
@@ -62,8 +60,7 @@ namespace RgSite.Controllers
                                          Name = prod.Product.Name,
                                          Description = prod.Product.Description,
                                          ImageUrl = prod.Product.ImageUrl,
-                                         CustomerPrices = prod.Product.CustomerPrices,
-                                         SalonPrices = prod.Product.SalonPrices,
+                                         Prices = prod.Product.Prices,
                                          PriceRange = productService.GetProductPriceRange(prod.Product, role)
                                      })
                                      .ToList();
@@ -85,12 +82,8 @@ namespace RgSite.Controllers
             // If user is not logged in, assume Customer role
             string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
 
-            var product = new Product();
-
-            if (role == RoleName.Customer)
-                product = await productService.GetProductForCustomerByIdAsync(id);
-            else
-                product = await productService.GetProductForSalonByIdAsync(id);
+            var product = await productService.GetProductByIdAsync(id);
+            if (product == null) return BadRequest();
 
             var vM = new ProductViewModel
             {
@@ -98,10 +91,8 @@ namespace RgSite.Controllers
                 Name = product.Name,
                 Description = product.Description,
                 ImageUrl = product.ImageUrl,
-                CustomerPrices = product.CustomerPrices,
-                SalonPrices = product.SalonPrices,
+                Prices = product.Prices,
                 PriceRange = productService.GetProductPriceRange(product, role),
-                Prices = productService.GetPrices(product, role)
             };
 
             return View(vM);
@@ -112,18 +103,16 @@ namespace RgSite.Controllers
             // If user is not logged in, assume Customer role
             string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
 
-            var product = new Product();
+            var product = await productService.GetProductByIdAsync(productId);
             decimal cost = 0;
 
-            if (role == RoleName.Customer)
-                product = await productService.GetProductForCustomerByIdAsync(productId);
-            else
-                product = await productService.GetProductForSalonByIdAsync(productId);
-
             if (product != null)
-                cost = productService.GetPrices(product, role).FirstOrDefault(p => p.Size == selectedSize).Cost;
+            {
+                var price = product.Prices.FirstOrDefault(p => p.Size == selectedSize);
+                cost = (role == RoleName.Customer || role == RoleName.Admin) ? price.CustomerCost : price.SalonCost;
+            }
 
-            var result = $"${cost}";
+            string result = $"${cost}";
 
             return Json(new { price = result });
         }

@@ -1,0 +1,203 @@
+﻿@model RgSite.ViewModels.ShoppingCartViewModel
+
+
+
+<div class="container">
+
+    <!--Cart Items Table-->
+    <div class="row table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="item-header">PRODUCT</th>
+                    <th class="item-header">PRICE</th>
+                    <th class="item-header">SIZE</th>
+                    <th class="item-header">QUANTITY</th>
+                    <th class="item-header">TOTAL</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CartItems)
+                {
+                    <tr class="item-row">
+                        <td class="">
+                            <a asp-controller="Products" asp-action="ProductDetail" asp-route-id="@item.Id">
+                                <div class="item-image" style="background-image: url(@item.ImageUrl)"></div>
+                            </a>
+                        </td>
+                        <td class="item">@item.Name</td>
+                        <td class="item">@item.DisplayPrice</td>
+                        <td class="item">@item.DisplaySize</td>
+                        <td class="item">
+                            <input id="item-quantity-@item.Id" asp-for="@item.Quantity" onchange="onQuantityChanged(@item.Id, @item.ProductId, @item.Price.Id)" class="form-control col-sm-4" />
+                        </td>
+                        <td class="item" id="total-@item.Id">@item.DisplayTotal</td>
+                        <td class="item">
+                            <i>
+                                <a id="delete-item" class="far fa-trash-alt pull-right" role="button" onclick="onDelete(event, @item.Id)" asp-controller="ShoppingCart" asp-action="RemoveFromCart" asp-route-id="@item.Id"></a>
+                            </i>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!--Working on this-->
+    <!--Cart Total-->
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+            <div class="cart-total">
+                <h2>CART TOTAL</h2>
+                <table cellspacing="0">
+                    <tbody>
+                        <tr class="cart-subtotal">
+                            <th>SUBTOTAL</th>
+                            <td>
+                                <span class="amount">
+                                    @Model.SubTotal
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="cart-shipping">
+                            <th>SHIPPING</th>
+                            <td>
+                                <span class="amount">
+                                    @Model.ShippingCost
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="cart-total">
+                            <th>TOTAL</th>
+                            <td>
+                                <span class="amount">
+                                    @Model.Total
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a id="checkout" class="btn btn-success btn-block custom-button-color" role="button" asp-controller="ShoppingCart" asp-action="Checkout" asp-route-id="@Model.User.Id">CHECKOUT</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .container {
+        padding-top: 15px;
+    }
+
+    .item-image {
+        height: 120px;
+        width: 120px;
+        background-size: 100%;
+    }
+
+    .table {
+        font-family: 'Lato', Arial, sans-serif;
+    }
+
+    .item-header {
+        font-weight: 900 !important;
+    }
+
+    .item {
+        font-size: 18px;
+        font-weight: 600;
+        vertical-align: middle !important;
+    }
+
+    #delete-item {
+        color: red;
+    }
+
+    .cart-total h2 {
+        font-size: 14px;
+        font-weight: 700;
+        margin: 0;
+        padding-bottom: 20px;
+        color: #262e31;
+    }
+
+    .cart-total table {
+        width: 100%;
+        border-collapse: separate;
+        margin: 0 0 6px;
+        padding: 0;
+        border-width: 0;
+        border-spacing: 0;
+        background-color: transparent;
+        display: table;
+    }
+
+    .cart-total table th {
+        width: 30%;
+        text-align: left;
+        font-weight: 700;
+        color: #8a97a2;
+        border: none;
+        vertical-align: top;
+        line-height: 1.5em;
+        padding: 9px 12px;
+    }
+
+    .amount {
+        font-size: 14px;
+        color: #8a97a2;
+        font-weight: 700;
+    }
+
+    .custom-button-color {
+        background-color: #e11383;
+	    border-color: #e11383;
+    }
+
+    .custom-button-color:hover {
+        background-color: #e11383;
+	    border-color: #e11383;
+    }
+</style>
+
+@section scripts
+{
+    <script>
+
+        function onQuantityChanged(itemId, productId, sizeId) {
+            var selectedQuantity = $('#item-quantity-' + itemId).val();
+
+            $.getJSON('/ShoppingCart/UpdateCart', { itemId: itemId, productId: productId, selectedSizeId: sizeId, selectedQuantity: selectedQuantity },
+                function (json) {
+                    $('#total-' + itemId).text(json.price);
+                });
+        }
+
+        // Need to pass itemId here because for some reason if you dont, the the id of the first item in the cart is always passed.
+       // if you dont show a popup, then the correct id is passed to the action in the controller
+        function onDelete(e, itemId) {
+            e.preventDefault();
+
+            var tempUrl = $("#delete-item").attr('href');
+            var url = tempUrl.replace(/\d+/g, itemId);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Item will be permanently removed.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = url;
+                }
+            })
+        }
+
+    </script>
+}
