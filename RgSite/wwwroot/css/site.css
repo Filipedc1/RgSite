@@ -13,12 +13,7 @@ a.navbar-brand {
 .header {
     text-align: center;
     background: url(../images/pw_maze_black_2X.png) left top repeat;
-    padding: 280px 0;
-}
-
-.logo {
-    width: 130px;
-    margin: 0 auto 35px;
+    padding: 100px 0;
 }
 
 .header h1 {

@@ -3,30 +3,7 @@
     ViewData["Title"] = "Index";
 }
 
-
-<div class="main-section" id="products-section">
-    <div class="container">
-        <div class="row">
-            <div class="container">
-                <div class="card-columns">
-                    @foreach (var prod in Model.Products)
-                    {
-                        <div class="card bg-light" style="height: 400px; width: 300px;">
-                            <img class="card-img-top h-75" src="@prod.ImageUrl" alt="Card image">
-                            <div class="card-body">
-                                <h5 class="card-title">@prod.Name</h5>
-                                @*<a class="btn btn-primary" asp-controller="Artist" asp-action="Detail" asp-route-id="@prod.ProductId">
-                                    See Profile
-                                </a>*@
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+<img class="banner" src="~/images/banners/rg_banner_amazonadv.jpg" />
 
 <div class="main-section alabaster" id="carousel-section">
     <div class="container">
@@ -36,7 +13,6 @@
                 <ul class="carousel-indicators" >
                     <li data-target="#demo" data-slide-to="0" class="active"></li>
                     <li data-target="#demo" data-slide-to="1"></li>
-                    <li data-target="#demo" data-slide-to="2"></li>
                 </ul>
 
                 <!-- The slideshow -->
@@ -45,37 +21,12 @@
                         <img class="carousel-logo img-fluid mx-auto d-block" src="~/images/carousel-logo.png" />
                         <h1 class="carousel-header amazon-slide">AMAZON X-TREME</h1>
                         <img id="carousel-img" class="img-fluid mx-auto d-block" src="~/images/amazon-nobackground.png">
-                        <div class="carousel-text-div-left-top float-left col-sm-4 align-text-top">
+                        <div class="carousel-text-div-left-top-amazon float-left col-sm-4 align-text-top">
                             <div class="icon"><img src="~/images/green-icon01.png" /></div>
                             <h4 class="carousel-text-header">WHY IT WORKS</h4>
                             <p class="carousel-text">Lightweight gel formula smoothes and straightens hair without leaving behind a heavy residue.</p>
                         </div>
-                        <div class="carousel-text-div-left-bottom float-left col-sm-4 align-text-top">
-                            <div class="icon"><img src="~/images/green-icon02.png" /></div>
-                            <h4 class="carousel-text-header">WONDERFUL RESULTS</h4>
-                            <p class="carousel-text">Unique straightening and shine! Results last for up to 12 weeks.</p>
-                        </div>
-                        <div class="carousel-text-div-right-top float-right col-sm-4 align-text-top">
-                            <div class="icon"><img src="~/images/green-icon04.png" /></div>
-                            <h4 class="carousel-text-header">HOW IT WORKS</h4>
-                            <p class="carousel-text">Works effectively without smoking downtime or smell.</p>
-                        </div>
-                        <div class="carousel-text-div-right-bottom float-right col-sm-4 align-text-top">
-                            <div class="icon"><img src="~/images/green-icon05.png" /></div>
-                            <h4 class="carousel-text-header">HOW TO MAINTAIN</h4>
-                            <p class="carousel-text">Enhance and prolong the treatment with the Copacabana Shampoo and Conditioner.</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img class="carousel-logo img-fluid mx-auto d-block" src="~/images/carousel-logo.png" />
-                        <h1 class="carousel-header amazon-slide">AMAZON X-TREME</h1>
-                        <img id="carousel-img" class="img-fluid mx-auto d-block" src="~/images/amazon-nobackground.png">
-                        <div class="carousel-text-div-left-top float-left col-sm-4 align-text-top">
-                            <div class="icon"><img src="~/images/green-icon01.png" /></div>
-                            <h4 class="carousel-text-header">WHY IT WORKS</h4>
-                            <p class="carousel-text">Lightweight gel formula smoothes and straightens hair without leaving behind a heavy residue.</p>
-                        </div>
-                        <div class="carousel-text-div-left-bottom float-left col-sm-4 align-text-top">
+                        <div class="carousel-text-div-left-bottom-amazon float-left col-sm-4 align-text-top">
                             <div class="icon"><img src="~/images/green-icon02.png" /></div>
                             <h4 class="carousel-text-header">WONDERFUL RESULTS</h4>
                             <p class="carousel-text">Unique straightening and shine! Results last for up to 12 weeks.</p>
@@ -130,58 +81,57 @@
     </div>
 </div>
 
-<div class="main-section" id="stories-section">
+<div class="main-section" id="contact-section">
     <div class="container">
-        <h2>Stories</h2>
-        <h6>We offer exceptional service with complimentary hugs.</h6>
         <div class="row">
-            <div class="col-lg-4 col-sm-6 wow fadeInLeft delay-05s">
-                <div class="service-list">
-                    <div class="service-list-col1">
-                        <i class="fa fa-paw"></i>
-                    </div>
-                    <div class="service-list-col2">
-                        <h3>branding &amp; identity</h3>
-                        <p>Proin iaculis purus digni consequat sem digni ssim. Donec entum digni ssim.</p>
-                    </div>
+            <div class="col-lg-6 col-sm-7">
+                <div class="contact-info address clearfix">
+                    <h3 class="section-subheader"><i class="fas fa-map-marker-alt"></i>Address:</h3>
+                    <span>3250 NW 23rd Ave - Ste 100<br>Pompano Beach, Florida 33069</span>
                 </div>
-                <div class="service-list">
-                    <div class="service-list-col1">
-                        <i class="fa fa-gear"></i>
-                    </div>
-                    <div class="service-list-col2">
-                        <h3>web development</h3>
-                        <p>Proin iaculis purus consequat sem digni ssim. Digni ssim porttitora .</p>
-                    </div>
+                <div class="contact-info phone clearfix">
+                    <h3 class="section-subheader"><i class="fas fa-phone"></i>Phone:</h3>
+                    <span>954-972-8101</span>
                 </div>
-                <div class="service-list">
-                    <div class="service-list-col1">
-                        <i class="fa fa-apple"></i>
-                    </div>
-                    <div class="service-list-col2">
-                        <h3>mobile design</h3>
-                        <p>Proin iaculis purus consequat digni sem digni ssim. Purus donec porttitora entum.</p>
-                    </div>
+                <div class="contact-info email clearfix">
+                    <h3 class="section-subheader"><i class="fas fa-envelope"></i>Email:</h3>
+                    <span>info@rgcosmetics.com</span>
                 </div>
-                <div class="service-list">
-                    <div class="service-list-col1">
-                        <i class="fa fa-medkit"></i>
-                    </div>
-                    <div class="service-list-col2">
-                        <h3>24/7 Support</h3>
-                        <p>Proin iaculis purus consequat sem digni ssim. Sem porttitora entum.</p>
-                    </div>
+                <div class="contact-info hours clearfix">
+                    <h3 class="section-subheader"><i class="far fa-clock"></i>Hours:</h3>
+                    <span><strong>Monday - Friday:</strong> 8am - 6pm<br><strong>Saturday - Sunday:</strong> Best not to ask.</span>
+                </div>
+                <ul class="social-link">
+                    <li class="facebook"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                    <li class="instagram"><a href="#"><i class="fab fa-instagram"></i></a></li>
+                    <li class="youtube"><a href="#"><i class="fab fa-youtube"></i></a></li>
+                    <li class="pinterest"><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
+                </ul>
+            </div>
+            <div class="col-lg-6 col-sm-5">
+                <div class="hc-image">
+                    <img class="contact-image" src="~/images/logo.png" />
                 </div>
             </div>
-            <figure class="col-lg-8 col-sm-6  text-right wow fadeInUp delay-02s">
-                <img src="img/macbook-pro.png" alt="">
-            </figure>
-
         </div>
     </div>
 </div>
 
 <style>
+    .banner {
+        height: auto;
+        max-width: 100%;
+        width: 100%;
+        vertical-align: top;
+    }
+
+    .service-image {
+        max-width: 100%;
+        border-style: none;
+        height: 30%;
+        margin-left: 30px;
+    }
+
     .main-section.alabaster {
 	    background: #fafafa;
     }
@@ -198,6 +148,10 @@
 
     /*Carousel
     --------------------------------------*/
+    #carousel-section {
+        padding-top: 0px;
+    }
+
     .carousel {
         width: 100%;        
     }
@@ -261,6 +215,24 @@
         z-index: 9;
     }
 
+    .carousel-text-div-left-top-amazon {
+        position: absolute; 
+        display: block; 
+        visibility: visible; 
+        left: 95px; 
+        top: 280px; 
+        z-index: 9;
+    }
+
+    .carousel-text-div-left-bottom-amazon {
+        position: absolute; 
+        display: block; 
+        visibility: visible; 
+        left: 95px; 
+        top: 440px; 
+        z-index: 9;
+    }
+
     .carousel-text-header {
         z-index: 8; 
         min-width: 241px; 
@@ -283,6 +255,87 @@
     .icon {
         position: absolute; 
         left: -40px; 
+    }
+
+    /* Contact
+    ---------------------------------*/
+    .contact-info {
+        font-size: 19px;
+        margin: 0 0 14px 68px;
+        padding-left: 0;
+    }
+
+    .contact-info h3 {
+        font-size: 19px;
+        font-weight: 400;
+        float: left;
+        width: 102px;
+        margin-right: 12px;
+        line-height: 28px;
+    }
+
+    .contact-info h3 i {
+        margin-right: 7px;
+    }
+
+    .contact-info span {
+        line-height: 28px;
+        display: block;
+        overflow: hidden;
+        color: #888888;
+    }
+
+    .social-link {
+        padding: 35px 0;
+        margin: 0 0 0 68px;
+        display: block;
+        overflow: hidden;
+        list-style: none;
+    }
+
+    .social-link li {
+        float: left;
+        margin-right: 8px;
+    }
+
+    .social-link li a {
+        display: block;
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        font-size: 25px;
+        color: #fff;
+        background: #222222;
+        border-radius: 50%;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .social-link li a:hover, .social-link li a:focus {
+        text-decoration: none;
+    }
+
+    .instagram a:hover {
+        background: #AA0DCD;
+    }
+
+    .facebook a:hover {
+        background: #3b5998;
+    }
+
+    .pinterest a:hover {
+        background: #cb2026;
+    }
+
+    .youtube a:hover {
+        background: #cb2026;
+    }
+
+    .contact-image {
+        max-width: 100%;
+        max-height: 100%;
+        height: 300px;
+        border-style: none;
     }
 
 </style>

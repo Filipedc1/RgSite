@@ -52,7 +52,7 @@ namespace RgSite
             services.AddScoped<IProduct, ProductService>();
             services.AddScoped<IShoppingCart, ShoppingCartService>();
             services.AddScoped<IOrder, OrderService>();
-            services.AddTransient<IEmailSender, EmailService>();
+            services.AddTransient<IEmail, EmailService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

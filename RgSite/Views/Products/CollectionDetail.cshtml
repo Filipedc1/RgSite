@@ -20,23 +20,6 @@
     </div>
 </div>
 
-@*Following same style as the old site*@
-@*<div class="products-section">
-    <div class="container">
-        <h2 class="products-title">PRODUCTS</h2>
-        <div class="product-content">
-            @foreach (var prod in Model.Products)
-            {
-                <div class="product-container">
-                    <a asp-controller="Products" asp-action="ProductDetail" asp-route-id="@prod.ProductId">
-                        <div class="product-image" style="background-image: url(@prod.ImageUrl)"></div>
-                    </a>
-                </div>
-            }
-        </div>
-    </div>
-</div>*@
-
 @*Using Cards*@
 <div class="products-section">
     <div class="container">
