@@ -1,0 +1,200 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model RgSite.ViewModels.ProfileViewModel
+
+
+<div class="container" style="padding-top:15px">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#profile">Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#orderHistoryTable">Order History</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+
+        <!--Profile Tab-->
+        <div id="profile" class="tab-pane container active">
+            <div class="container body-content">
+                <div class="row userProfile">
+                    <div class="col-md-4">
+                        <div id="userProfileImage" style="background-image: url(@Model.ProfileImageUrl)"></div>
+                        @if (User.Identity.Name == Model.Username)
+                        {
+                            <form method="post" enctype="multipart/form-data" asp-controller="Profile" asp-action="UploadProfileImage">
+                                <div id="upload" class="form-group" style="padding-top: 9px">
+                                    <label class="btn btn-info btn-file">
+                                        Browse for Image
+                                        <input asp-for="ImageUpload" type="file" name="file" style="display: none" />
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" id="btn-profile" class="btn btn-primary">Upload</button>
+                                </div>
+                            </form>
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <span id="userName">@Model.Username</span>
+                        @if (Model.IsAdmin)
+                        {
+                            <span class="isAdmin">Admin</span>
+                        }
+                        <span id="profile-label"><strong>Name:</strong> @Model.FullName</span>
+                        <span id="profile-label"><strong>Email:</strong> @Model.Email</span>
+                        <span id="profile-label"><strong>Phone Number:</strong> @Model.PhoneNumber</span>
+                        <span id="profile-label"><strong>Member Since:</strong> @Model.MemberSince</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Post History Tab-->
+        <div id="orderHistoryTable" class="tab-pane fade">
+            <div class="container body-content">
+                @if (!Model.OrderHistory.Any())
+                {
+                    <h3>No Orders.</h3>
+                }
+                else
+                {
+                    <div class="row">
+                        <table class="table table-hover" id="userIndexTable">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Order Date</th>
+                                    <th>Billing Address</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model.OrderHistory)
+                                {
+                                    <tr class="userRow">
+                                        <td>
+                                            @order.OrderId
+                                        </td>
+                                        <td>
+                                            @order.Placed
+                                        </td>
+                                        <td>
+                                            @order.BillingDetail.Address
+                                        </td>
+                                        <td>
+                                            @order.Total
+                                        </td>
+                                        <td>
+                                            <a id="order-details" asp-controller="Profile" asp-action="OrderHistoryDetail" asp-route-id="@order.OrderId">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal" id="order-details-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Order Details</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .userProfile {
+        padding: 32px 0 64px 24px;
+        background-color: #fff;
+    }
+
+    #userProfileImage {
+        display: inline-block;
+        width: 200px;
+        height: 200px;
+        background-color: #ddd;
+    }
+
+    #profile-label {
+        display: block;
+        color: #444;
+        padding-top: 3px;
+    }
+
+    #userName {
+        display: block;
+        color: #2569d5;
+        font-size: 1.7em;
+    }
+
+    .userProfilePic {
+        height: 50px;
+        width: 50px;
+        background-size: 100%;
+    }
+
+    .isAdmin {
+        display: inline-block;
+        padding: 3px;
+        background-color: #FFEB3B;
+        color: #000;
+        font-family: 'Roboto Mono';
+    }
+</style>
+
+@section scripts
+{
+    <script>
+        //$('#order-details').click(function (e) {
+        //    e.preventDefault();
+        //    var url = $(this).attr('href');
+
+        //    $.get(url,
+        //        function (data) {
+        //            $('.modal-body').html(data);
+        //        }
+        //    );
+
+        //    $('#order-details-modal').modal('show');
+        //});
+
+        $('#order-details').click(function (e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+
+            $.get(url, function (data) {
+                    Swal.fire({
+                        title: 'Order Details',
+                        html: data
+                    })
+                }
+            )
+        });
+
+    </script>
+}

@@ -3,6 +3,7 @@ using RgSite.Data;
 using RgSite.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,6 +23,18 @@ namespace RgSite.Service
             return await _database.Orders
                                   .Include(o => o.OrderDetails)
                                   .Include(o => o.BillingDetail)
+                                    .ThenInclude(o => o.Address)
+                                  .ToListAsync();
+        }
+
+        public async Task<List<Order>> GetAllOrdersForUserAsync(string userId)
+        {
+            return await _database.Orders
+                                  .Include(o => o.OrderDetails)
+                                  .Include(o => o.BillingDetail)
+                                    .ThenInclude(o => o.Address)
+                                  .Include(o => o.User)
+                                  .Where(o => o.User.Id == userId)
                                   .ToListAsync();
         }
 
@@ -30,6 +43,7 @@ namespace RgSite.Service
             return await _database.Orders
                                   .Include(o => o.OrderDetails)
                                   .Include(o => o.BillingDetail)
+                                    .ThenInclude(o => o.Address)
                                   .FirstOrDefaultAsync(o => o.OrderId == id);
         }
 
@@ -49,6 +63,14 @@ namespace RgSite.Service
             }
 
             return true;
+        }
+
+        public async Task<List<OrderDetail>> GetOrderDetailsForOrder(int orderId)
+        {
+            return await _database.OrderDetails
+                                  .Include(o => o.Order)
+                                  .Where(o => o.Order.OrderId == orderId)
+                                  .ToListAsync();
         }
 
         public async Task<decimal> GetCartTotalCostWithShippingAsync(string userId)

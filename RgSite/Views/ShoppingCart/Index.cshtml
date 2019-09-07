@@ -19,33 +19,41 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.CartItems)
+                @if (Model.CartItems.Any())
+                {
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <tr class="item-row">
+                            <td class="">
+                                <a asp-controller="Products" asp-action="ProductDetail" asp-route-id="@item.Id">
+                                    <div class="item-image" style="background-image: url(@item.ImageUrl)"></div>
+                                </a>
+                            </td>
+                            <td class="item">@item.Name</td>
+                            <td class="item">@item.DisplayPrice</td>
+                            <td class="item">@item.DisplaySize</td>
+                            <td class="item">
+                                <input id="item-quantity-@item.Id" asp-for="@item.Quantity" onchange="onQuantityChanged(@item.Id, @item.ProductId, @item.Price.Id)" class="form-control col-sm-4" />
+                            </td>
+                            <td class="item" id="total-@item.Id">@item.DisplayTotal</td>
+                            <td class="item">
+                                <i>
+                                    <a id="delete-item" class="far fa-trash-alt pull-right" role="button" onclick="onDelete(event, @item.Id)" asp-controller="ShoppingCart" asp-action="RemoveFromCart" asp-route-id="@item.Id"></a>
+                                </i>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr class="item-row">
-                        <td class="">
-                            <a asp-controller="Products" asp-action="ProductDetail" asp-route-id="@item.Id">
-                                <div class="item-image" style="background-image: url(@item.ImageUrl)"></div>
-                            </a>
-                        </td>
-                        <td class="item">@item.Name</td>
-                        <td class="item">@item.DisplayPrice</td>
-                        <td class="item">@item.DisplaySize</td>
-                        <td class="item">
-                            <input id="item-quantity-@item.Id" asp-for="@item.Quantity" onchange="onQuantityChanged(@item.Id, @item.ProductId, @item.Price.Id)" class="form-control col-sm-4" />
-                        </td>
-                        <td class="item" id="total-@item.Id">@item.DisplayTotal</td>
-                        <td class="item">
-                            <i>
-                                <a id="delete-item" class="far fa-trash-alt pull-right" role="button" onclick="onDelete(event, @item.Id)" asp-controller="ShoppingCart" asp-action="RemoveFromCart" asp-route-id="@item.Id"></a>
-                            </i>
-                        </td>
+                        <td class="item nodata" colspan="7">No Items in cart.</td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 
-    <!--Working on this-->
     <!--Cart Total-->
     <div class="row">
         <div class="col-md-8"></div>
@@ -80,7 +88,14 @@
                         </tr>
                     </tbody>
                 </table>
-                <a id="checkout" class="btn btn-success btn-block custom-button-color" role="button" asp-controller="ShoppingCart" asp-action="Checkout" asp-route-id="@Model.User.Id">CHECKOUT</a>
+                @if (Model.CartItems.Any())
+                {
+                    <a id="checkout" class="btn btn-success btn-block custom-button-color" role="button" asp-controller="ShoppingCart" asp-action="Checkout" asp-route-id="@Model.User.Id">CHECKOUT</a>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary btn-block custom-button-color disabled">CHECKOUT</button>
+                }
             </div>
         </div>
     </div>
@@ -100,6 +115,10 @@
 
     .table {
         font-family: 'Lato', Arial, sans-serif;
+    }
+
+    .nodata {
+        text-align: center;
     }
 
     .item-header {
@@ -153,6 +172,11 @@
     }
 
     .custom-button-color {
+        background-color: #e11383;
+	    border-color: #e11383;
+    }
+
+    .btn-primary.disabled {
         background-color: #e11383;
 	    border-color: #e11383;
     }

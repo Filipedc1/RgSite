@@ -8,7 +8,7 @@ namespace RgSite.ViewModels
 {
     public class ShoppingCartViewModel
     {
-        public decimal SubTotal         { get; set; }
+        public decimal SubTotal         { get; set; } = 0.00M;
         public decimal ShippingCost     { get; set; } = 0.00M;
         public decimal Total            { get; set; } = 0.00M;
 
@@ -17,8 +17,8 @@ namespace RgSite.ViewModels
         public string DisplayTotal          => $"${Total}";
 
         // User.Id Represents the shoppingcartId
-        public AppUser User             { get; set; }
+        public AppUser User { get; set; } = new AppUser();
 
-        public List<CartItemViewModel> CartItems { get; set; }
+        public List<CartItemViewModel> CartItems { get; set; } = new List<CartItemViewModel>();
     }
 }

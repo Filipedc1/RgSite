@@ -42,8 +42,10 @@ namespace RgSite.Controllers
             decimal subTotal = 0;
 
             var cartItems = await cartService.GetAllAsync(userId);
-            if (cartItems != null)
-                subTotal = cartService.GetCartTotalCostAsync(userId, role, cartItems);
+            if (!cartItems.Any())
+                return View(new ShoppingCartViewModel());
+
+            subTotal = cartService.GetCartTotalCostAsync(userId, role, cartItems);
 
             var items = cartItems.Select(item => new CartItemViewModel
             {
@@ -242,7 +244,7 @@ namespace RgSite.Controllers
                 await emailService.SendEmailAsync(model.Email, "Your Order Confirmation", "Please login to your account to view your orders");
 
                 // empty out shoppingcart once order is completed
-                //await cartService.ClearCartAsync(user.Id);
+                await cartService.ClearCartAsync(user.Id);
 
                 return View("Success");
             }

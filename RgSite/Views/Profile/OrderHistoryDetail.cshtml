@@ -1,0 +1,31 @@
+﻿@model RgSite.ViewModels.OrderDetailListViewModel
+
+<table class="table table-hover table-striped" id="userIndexTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Size</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model.OrderDetails)
+        {
+            <tr class="userRow">
+                <td>
+                    @order.ProductName
+                </td>
+                <td>
+                    @order.ProductQuantity
+                </td>
+                <td>
+                    @order.ProductSize
+                </td>
+                <td>
+                    @order.ProductCost
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
