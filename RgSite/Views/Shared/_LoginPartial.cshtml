@@ -8,22 +8,39 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="Detail" asp-route-id="@UserManager.GetUserId(User)" title="Manage">@User.Identity.Name.ToUpper()</a>
-            <!--<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name.ToUpper()</a>-->
+            <a class="nav-link text-dark" title="Manage">@User.Identity.Name</a>
         </li>
-        <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-dark">LOGOUT</button>
-            </form>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link text-dark dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                <i class="fas fa-user-circle fa-lg"></i>
+            </a>
+            <div class="dropdown-menu">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="Detail" asp-route-id="@UserManager.GetUserId(User)" title="Manage">
+                    MY ACCOUNT
+                </a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="Index" asp-route-id="@UserManager.GetUserId(User)" title="Manage">
+                        USERS
+                    </a>
+                }
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="nav-link btn btn-link text-dark">LOGOUT</button>
+                </form>
+            </div>
         </li>
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">REGISTER</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">LOGIN</a>
+        <li class="nav-item dropdown">
+            <a class="nav-link text-dark dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                <i class="fas fa-user-circle fa-lg"></i>
+            </a>
+            <div class="dropdown-menu">
+                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">LOGIN</a>
+                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">REGISTER</a>
+            </div>
         </li>
     }
 </ul>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using RgSite.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,10 @@ namespace RgSite.ViewModels
     public class ProfileViewModel
     {
         public string UserId                        { get; set; }
+
+        [Required]
         public string Username                      { get; set; }
+
         public string FirstName                     { get; set; }
         public string LastName                      { get; set; }
         public string ProfileImageUrl               { get; set; }

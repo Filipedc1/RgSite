@@ -37,7 +37,7 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
+            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRoleAsync() : RoleName.Customer;
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             decimal subTotal = 0;
 
@@ -83,8 +83,8 @@ namespace RgSite.Controllers
                 return BadRequest();
 
             // If user is not logged in, assume Customer role. Only keep this if users can add to cart without logging in.
-            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
-            var user = await userService.GetCurrentUser();
+            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRoleAsync() : RoleName.Customer;
+            var user = await userService.GetCurrentUserAsync();
 
             var product = await productService.GetProductByIdAsync(model.ProductId);
             var price = product.Prices.FirstOrDefault(p => p.Id == model.Price.Id);
@@ -131,7 +131,7 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> Checkout(string id)
         {
-            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
+            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRoleAsync() : RoleName.Customer;
             string userId = id;
             decimal subTotal = 0;
 
@@ -200,8 +200,8 @@ namespace RgSite.Controllers
                 OrderNotes = model.OrderNotes
             };
 
-            var user = await userService.GetCurrentUser();
-            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
+            var user = await userService.GetCurrentUserAsync();
+            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRoleAsync() : RoleName.Customer;
             decimal subTotal = 0;
             decimal total = 0;
 
@@ -256,7 +256,7 @@ namespace RgSite.Controllers
         public async Task<IActionResult> UpdateCart(int itemId, int productId, int selectedSizeId, string selectedQuantity)
         {
             //If user is not logged in, assume Customer role
-            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRole() : RoleName.Customer;
+            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRoleAsync() : RoleName.Customer;
 
             var product = await productService.GetProductByIdAsync(productId);
             decimal cost = 0;

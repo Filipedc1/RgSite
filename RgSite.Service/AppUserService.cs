@@ -37,24 +37,23 @@ namespace RgSite.Service
             return await _database.AppUsers.ToListAsync();
         }
 
-        public async Task SetProfileImage(string id, string url)
+        public async Task SetProfileImageAsync(AppUser user, string url)
         {
-            var user = await GetByIdAsync(id);
             user.ProfileImageUrl = url;
             _database.Update(user);
             await _database.SaveChangesAsync();
         }
 
 
-        public async Task<AppUser> GetCurrentUser()
+        public async Task<AppUser> GetCurrentUserAsync()
         {
             var username = _httpContextAccessor.HttpContext.User.Identity.Name;
             return await userManager.FindByNameAsync(username);
         }
 
-        public async Task<string> GetCurrentUserRole()
+        public async Task<string> GetCurrentUserRoleAsync()
         {
-            var user = await GetCurrentUser();
+            var user = await GetCurrentUserAsync();
             var roles = await userManager.GetRolesAsync(user);
 
             return roles.FirstOrDefault();

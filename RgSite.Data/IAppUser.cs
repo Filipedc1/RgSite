@@ -10,9 +10,9 @@ namespace RgSite.Data
     {
         Task<AppUser> GetByIdAsync(string id);
         Task<IEnumerable<AppUser>> GetAllAsync();
-        Task SetProfileImage(string id, string url);
-        Task<AppUser> GetCurrentUser();
-        Task<string> GetCurrentUserRole();
+        Task SetProfileImageAsync(AppUser user, string url);
+        Task<AppUser> GetCurrentUserAsync();
+        Task<string> GetCurrentUserRoleAsync();
         string GetCurrentUserName();
     }
 }

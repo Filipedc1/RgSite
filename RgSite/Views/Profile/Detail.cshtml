@@ -22,17 +22,11 @@
                         <div id="userProfileImage" style="background-image: url(@Model.ProfileImageUrl)"></div>
                         @if (User.Identity.Name == Model.Username)
                         {
-                            <form method="post" enctype="multipart/form-data" asp-controller="Profile" asp-action="UploadProfileImage">
-                                <div id="upload" class="form-group" style="padding-top: 9px">
-                                    <label class="btn btn-info btn-file">
-                                        Browse for Image
-                                        <input asp-for="ImageUpload" type="file" name="file" style="display: none" />
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <button type="submit" id="btn-profile" class="btn btn-primary">Upload</button>
-                                </div>
-                            </form>
+                            <div class="form-group" style="padding-top: 9px">
+                                <a id="update-profile" class="btn btn-primary" role="button" asp-controller="Profile" asp-action="UpdateAccount" asp-route-id="@Model.UserId">
+                                    Update Account
+                                </a>
+                            </div>
                         }
                     </div>
                     <div class="col-md-8">
@@ -50,7 +44,7 @@
             </div>
         </div>
 
-        <!--Post History Tab-->
+        <!--Order History Tab-->
         <div id="orderHistoryTable" class="tab-pane fade">
             <div class="container body-content">
                 @if (!Model.OrderHistory.Any())
@@ -170,18 +164,37 @@
 @section scripts
 {
     <script>
-        //$('#order-details').click(function (e) {
-        //    e.preventDefault();
-        //    var url = $(this).attr('href');
 
-        //    $.get(url,
-        //        function (data) {
-        //            $('.modal-body').html(data);
-        //        }
-        //    );
+        $('#update-profile').click(function (e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
 
-        //    $('#order-details-modal').modal('show');
-        //});
+            $.get(url, function (data) {
+                Swal.fire({
+                    title: 'Update Profile',
+                    html: data,
+                    showCancelButton: true,
+                    confirmButtonText: 'Save',
+                }).then((result) => {
+                    if (result.value) {
+                        var data = $('#profile-form').serialize();
+
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("UpdateAccount", "Profile")',
+                            data: data,
+                            success: function (data) {
+                                Swal.fire(
+                                    'Success!',
+                                    'Your account information has been updated.',
+                                    'success'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+        });
 
         $('#order-details').click(function (e) {
             e.preventDefault();
