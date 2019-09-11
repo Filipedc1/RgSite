@@ -47,8 +47,7 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> CollectionDetail(int id)
         {
-            // If user is not logged in, assume Customer role
-            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRoleAsync() : RoleName.Customer;
+            string role = await userService.GetCurrentUserRoleAsync();
 
             var collection = await productService.GetProductCollectionByIdAsync(id);
             if (collection == null) return BadRequest();
@@ -79,8 +78,7 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> ProductDetail(int id)
         {
-            // If user is not logged in, assume Customer role
-            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRoleAsync() : RoleName.Customer;
+            string role = await userService.GetCurrentUserRoleAsync();
 
             var product = await productService.GetProductByIdAsync(id);
             if (product == null) return BadRequest();
@@ -100,8 +98,7 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> GetPrice(int productId, string selectedSize)
         {
-            // If user is not logged in, assume Customer role
-            string role = HttpContext.User.Identity.IsAuthenticated ? await userService.GetCurrentUserRoleAsync() : RoleName.Customer;
+            string role = await userService.GetCurrentUserRoleAsync();
 
             var product = await productService.GetProductByIdAsync(productId);
             decimal cost = 0;

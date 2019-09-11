@@ -41,6 +41,25 @@ namespace RgSite.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [Display(Name = "First Name")]
+            [StringLength(20, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
+            [StringLength(20, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+            public string LastName { get; set; }
+
+            [Required]
+            [StringLength(12)]
+            [Display(Name = "Phone Number")]
+            public string PhoneNumber { get; set; }
+
+            [Required]
+            [Display(Name = "Date Joined")]
+            public DateTime DateJoined { get; set; }
+
+            [Required]
             [Display(Name = "Username")]
             [StringLength(20, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
             public string Username { get; set; }
@@ -72,7 +91,16 @@ namespace RgSite.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new AppUser { UserName = Input.Username, Email = Input.Email, MemberSince = DateTime.UtcNow };
+                var user = new AppUser
+                {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    PhoneNumber = Input.PhoneNumber,
+                    UserName = Input.Username,
+                    Email = Input.Email,
+                    IsActive = true,
+                    MemberSince = DateTime.UtcNow
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

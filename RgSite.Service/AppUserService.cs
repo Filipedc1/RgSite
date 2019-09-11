@@ -53,6 +53,10 @@ namespace RgSite.Service
 
         public async Task<string> GetCurrentUserRoleAsync()
         {
+            // If user is not logged in, assume Customer role
+            if (!_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                return RoleName.Customer;
+
             var user = await GetCurrentUserAsync();
             var roles = await userManager.GetRolesAsync(user);
 
