@@ -79,6 +79,13 @@ namespace RgSite.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [StringLength(20)]
+            [Display(Name = "Salon / Hair Company")]
+            public string SalonOrHairCompany { get; set; }
+
+            [Display(Name = "Cosmetology / Salon License")]
+            public string CosmetologyOrSalonLicense { get; set; }
         }
 
         public void OnGet(string returnUrl = null)
@@ -98,12 +105,20 @@ namespace RgSite.Areas.Identity.Pages.Account
                     PhoneNumber = Input.PhoneNumber,
                     UserName = Input.Username,
                     Email = Input.Email,
+                    Salon = (!string.IsNullOrEmpty(Input.CosmetologyOrSalonLicense) && !string.IsNullOrEmpty(Input.SalonOrHairCompany)) 
+                            ? BuildSalonModel() 
+                            : null,
                     IsActive = true,
                     MemberSince = DateTime.UtcNow
                 };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
                 if (result.Succeeded)
                 {
+                    string role = user.Salon == null ? "Consumer" : "Salon";
+                    await _userManager.AddToRoleAsync(user, role);
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -119,6 +134,7 @@ namespace RgSite.Areas.Identity.Pages.Account
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -127,6 +143,16 @@ namespace RgSite.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private Salon BuildSalonModel()
+        {
+            return new Salon
+            {
+                Name = Input.SalonOrHairCompany,
+                License = Input.CosmetologyOrSalonLicense,
+                PhoneNumber = Input.PhoneNumber,
+            };
         }
     }
 }

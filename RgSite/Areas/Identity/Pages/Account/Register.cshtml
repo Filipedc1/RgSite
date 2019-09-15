@@ -10,11 +10,29 @@
         <h2 class="text-muted float-left">@ViewData["Title"]</h2>
     </div>
 
+    <!--Selection-->
+    <h3 id="register-title">ARE YOU A...</h3>
     <div class="row">
+        <div class="col-md-6">
+            <a id="salon-select" href="#" onclick="SalonSelected(event)">
+                <img id="register-image-salon" class="register-image" src="~/images/salonorhairstylist.jpg" />
+            </a>
+            <h3 id="register-select">SALON/HAIRSTYLIST</h3>
+        </div>
+        <div class="col-md-6">
+            <a id="consumer-select" href="#" onclick="ConsumerSelected(event)">
+                <img id="register-image-consumer" class="register-image" src="~/images/consumer.jpg" />
+            </a>
+            <h3 id="register-select">CONSUMER</h3>
+        </div>
+    </div>
+
+    <!--Form-->
+    <div class="row register-form">
         <div class="col-md-12">
+            <hr />
             <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
                 <div asp-validation-summary="All" class="text-danger"></div>
-
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label asp-for="Input.FirstName"></label>
@@ -39,7 +57,18 @@
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
                 </div>
-
+                <div class="form-row is-salon">
+                    <div class="form-group col-md-6">
+                        <label asp-for="Input.SalonOrHairCompany"></label>
+                        <input id="input-salon" asp-for="Input.SalonOrHairCompany" class="form-control" />
+                        <span asp-validation-for="Input.SalonOrHairCompany" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Input.CosmetologyOrSalonLicense"></label>
+                        <input id="input-license" asp-for="Input.CosmetologyOrSalonLicense" class="form-control" />
+                        <span asp-validation-for="Input.CosmetologyOrSalonLicense" class="text-danger"></span>
+                    </div>
+                </div>
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label asp-for="Input.PhoneNumber"></label>
@@ -58,7 +87,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit" class="btn btn-primary custom-button-color">Register</button>
             </form>
         </div>
     </div>
@@ -66,4 +95,71 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        $(document).ready(function () {
+            $(".register-form").hide();
+        });
+
+        function SalonSelected(e) {
+            e.preventDefault();
+            $(".register-form").show();
+            $(".is-salon").show();
+            $("#register-image-salon").css({"opacity": "", "filter": ""}) //clear css 
+            $("#register-image-consumer").css({ "opacity": "0.4", "filter": "alpha(opacity=40)" })
+            $("#input-salon").prop('required', true);
+            $("#input-license").prop('required', true);
+        }
+
+        function ConsumerSelected(e) {
+            e.preventDefault();
+            $(".register-form").show();
+            $(".is-salon").hide();
+            $("#register-image-consumer").css({"opacity": "", "filter": ""}) //clear css
+            $("#register-image-salon").css({ "opacity": "0.4", "filter": "alpha(opacity=40)" })
+            $("#input-salon").prop('required', false);
+            $("#input-license").prop('required', false);
+        }
+
+    </script>
 }
+
+
+<style>
+    .register-image {
+        height: auto;
+        max-width: 100%;
+        vertical-align: top;
+    }
+
+    #register-title {
+        font-size: 22px;
+        color: #000000;
+        text-align: center;
+        font-family: Lato;
+        font-weight: 300;
+        font-style: normal;
+        padding-top: 25px;
+    }
+
+    #register-select {
+        font-size: 32px;
+        color: #8a8a8d;
+        text-align: center;
+        font-family: Raleway;
+        font-weight: 400;
+        font-style: normal;
+        padding-top: 10px;
+    }
+
+    .custom-button-color {
+        background-color: #e11383;
+	    border-color: #e11383;
+    }
+
+    .custom-button-color:hover {
+        background-color: #e11383;
+	    border-color: #e11383;
+    }
+</style>
