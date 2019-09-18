@@ -16,8 +16,11 @@ namespace RgSite.ViewModels
         public string PriceRange    { get; set; }
         public int Quantity         { get; set; } = 1;
 
-        public Price Price                 { get; set; }
-        public virtual IEnumerable<Price> Prices   { get; set; }
+        public Price Price          { get; set; }
+        public Comment Comment      { get; set; } //used for adding new comment.
+
+        public virtual IEnumerable<Price> Prices        { get; set; }
+        public virtual IEnumerable<Comment> Comments    { get; set; } = new List<Comment>();
 
         public string DisplayName => Name?.ToUpper();
     }

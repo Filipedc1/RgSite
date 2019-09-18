@@ -20,6 +20,7 @@ namespace RgSite.Data
         public DbSet<Order> Orders                          { get; set; }
         public DbSet<OrderDetail> OrderDetails              { get; set; }
         public DbSet<BillingDetail> BillingDetails          { get; set; }
+        public DbSet<Comment> Comment                       { get; set; }
 
 
         // Junction table

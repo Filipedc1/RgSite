@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RgSite.Data;
 using RgSite.Data.Models;
@@ -88,6 +89,7 @@ namespace RgSite.Controllers
                 ProductId = product.ProductId,
                 Name = product.Name,
                 Description = product.Description,
+                Comments = await productService.GetAllCommentsByProductIdAsync(product.ProductId),
                 ImageUrl = product.ImageUrl,
                 Prices = product.Prices,
                 PriceRange = productService.GetProductPriceRange(product, role),
@@ -114,6 +116,34 @@ namespace RgSite.Controllers
             return Json(new { price = result });
         }
 
+        #region Comment Methods
+
+        [HttpPost]
+        public async Task<IActionResult> AddComment(ProductViewModel vm)
+        {
+            if (!ModelState.IsValid || vm.Comment == null)
+                return BadRequest();
+
+            var user = await userService.GetCurrentUserAsync();
+
+            if (await productService.AddNewCommentAsync(vm.ProductId, vm.Comment, user))
+                return RedirectToAction("ProductDetail", "Products", new { @id = vm.ProductId });
+
+            return BadRequest();
+        }
+
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var comment = await productService.GetCommentByIdAsync(id);
+            var product = await productService.GetProductByIdAsync(comment.Product.ProductId);
+
+            if (await productService.DeleteCommentAsync(comment))
+                return RedirectToAction("ProductDetail", new { id = product.ProductId });
+
+            return BadRequest();
+        }
+
+        #endregion
 
         #region Helpers
 

@@ -99,5 +99,57 @@ namespace RgSite.Service
         {
             return await _database.Prices.ToListAsync();
         }
+
+
+
+        #region Comment Methods
+
+        public async Task<bool> AddNewCommentAsync(int productId, Comment comment, AppUser commentAuthor)
+        {
+            if (comment == null) return false;
+
+            var productInDB = await GetProductByIdAsync(productId);
+            if (productInDB != null)
+            {
+                comment.Product = productInDB;
+                comment.TimeSent = DateTime.Now;
+                comment.User = commentAuthor;
+
+                await _database.Comment.AddAsync(comment);
+                await _database.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DeleteCommentAsync(Comment comment)
+        {
+            if (comment == null) return false;
+
+            _database.Comment.Remove(comment);
+            await _database.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<IEnumerable<Comment>> GetAllCommentsByProductIdAsync(int productId)
+        {
+            return await _database.Comment
+                                  .Include(p => p.Product)
+                                  .Include(u => u.User)
+                                  .Where(c => c.Product.ProductId == productId)
+                                  .ToListAsync();
+        }
+
+        public async Task<Comment> GetCommentByIdAsync(int id)
+        {
+            return await _database.Comment
+                                  .Include(c => c.Product)
+                                  .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        #endregion
     }
 }

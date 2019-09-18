@@ -36,6 +36,73 @@
             </div>
         </div>
     </div>
+
+    <!--Comments-->
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="heading">
+                <h4 class="card-title mb-0">
+                    <a class="card-link" data-toggle="collapse" href="#collapse1">
+                        Comments
+
+                        @if (Model.Comments == null)
+                        {
+                            <span class="badge badge-pill badge-secondary float-right">0</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-pill badge-secondary float-right">@Model.Comments.Count()</span>
+                        }
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse1" class="collapse show" data-parent="#accordion">
+                @if (Model.Comments.Any())
+                {
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <div class="card-body border-top">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <a asp-controller="Profile" asp-action="Detail" asp-route-id="@comment.User.Id">
+                                        <div class="userProfilePicForComments" style="background-image: url(@comment.User.ProfileImageUrl)"></div>
+                                    </a>
+                                    <span class="comment-username">@comment.User.UserName</span><br />
+                                    <span class="comment-date">@comment.TimeSent</span>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="comment-content">
+                                        @Html.Raw(comment.Content)
+                                        @if (comment.User.UserName == User.Identity.Name)
+                                        {
+                                            <i>
+                                                <a id="delete-comment" onclick="onDeleteComment(event, @comment.Id)" class="far fa-trash-alt float-right" role="button" asp-controller="Products" asp-action="DeleteComment" asp-route-id="@comment.Id"></a>
+                                            </i>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="card-body">
+                        No Comments
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!--Add comment-->
+    <div class="form-group col-md-6" id="add-comment">
+        <form asp-controller="Products" asp-action="AddComment">
+            <textarea asp-for="Comment.Content" class="form-control" placeholder="Add comment..."></textarea>
+            <button id="add-comment-btn" type="submit" class="btn btn-primary custom-button-color">Add comment</button>
+            @Html.HiddenFor(p => p.ProductId)
+        </form>
+    </div>
 </div>
 
 
@@ -83,14 +150,50 @@
         color: #262e31;
     }
 
-    .custom-button-color {
+    .custom-button-color, .custom-button-color:hover {
         background-color: #e11383;
-	    border-color: #e11383;
+        border-color: #e11383;
     }
 
-    .custom-button-color:hover {
-        background-color: #e11383;
-	    border-color: #e11383;
+    #add-comment {
+        padding-top: 10px;
+        padding-left: 0px;
+    }
+
+    #add-comment-btn {
+        margin-top: 10px;
+    }
+
+    .userProfilePicForComments {
+        height: 30px;
+        width: 30px;
+        background-size: 100%;
+    }
+
+    .comment-username, .comment-date {
+        color: dimgray;
+    }
+
+    .comment-content {
+        color: black;
+    }
+
+    .card-title {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .card-link {
+        color: black;
+    }
+
+    #delete-comment {
+        color: red;
+    }
+
+    #collapse1 {
+        color: #336699;
+        font-family: Arial, Helvetica, sans-serif;
     }
 </style>
 
@@ -104,10 +207,33 @@
             var selectedSize = $('#selected-size option:selected').text();
             var productId = $('#ProductId').val();
 
-            $.getJSON('/Products/GetPrice', { productId: productId, selectedSize: selectedSize }, function(json) {
+            $.getJSON('/Products/GetPrice', { productId: productId, selectedSize: selectedSize }, function (json) {
                 $('#cost').text(json.price);
             });
         });
+
+        //delete comment
+        function onDeleteComment(e, commentId) {
+            e.preventDefault();
+
+            var tempurl = $("#delete-comment").attr('href');
+            var url = tempurl.replace(/\d+/g, commentId);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "comment will be permanently deleted.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirm'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = url;
+                }
+            })
+
+        };
 
     </script>
 }

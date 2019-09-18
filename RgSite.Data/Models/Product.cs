@@ -13,7 +13,8 @@ namespace RgSite.Data.Models
         public string ImageUrl      { get; set; }
 
 
-        public virtual IEnumerable<Price> Prices    { get; set; }
+        public virtual IEnumerable<Price> Prices        { get; set; }
+        public virtual IEnumerable<Comment> Comments    { get; set; }
 
         public ICollection<CollectionProduct> CollectionProducts { get; set; }
     }
