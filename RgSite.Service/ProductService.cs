@@ -77,19 +77,16 @@ namespace RgSite.Service
 
         public string GetProductPriceRange(Product product, string role)
         {
-            string range = string.Empty;
+            string range = "N/A";
+            if (!product.Prices.Any()) return range;
 
-            if ((role == RoleName.Customer || role == RoleName.Admin) && product.Prices != null && product.Prices.Count() > 0)
+            if (role == RoleName.Customer || role == RoleName.Admin)
             {
                 range = $"${product.Prices.FirstOrDefault().CustomerCost} - ${product.Prices.LastOrDefault().CustomerCost}";
             }
-            else if (role == RoleName.Salon && product.Prices != null && product.Prices.Count() > 0)
+            else if (role == RoleName.Salon)
             {
                 range = $"${product.Prices.FirstOrDefault().SalonCost} - ${product.Prices.LastOrDefault().SalonCost}";
-            }
-            else
-            {
-                range = "N/A";
             }
 
             return range;

@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using RgSite.Data;
 using RgSite.Data.Models;
 using RgSite.ViewModels;
+using Stripe;
 
 namespace RgSite.Controllers
 {
@@ -20,17 +22,19 @@ namespace RgSite.Controllers
         private readonly IAppUser userService;
         private readonly IOrder orderService;
         private readonly IEmailSender emailService;
+        private readonly IConfiguration _config;
 
         #region Constructor
 
         public ShoppingCartController(IProduct productService, IShoppingCart cartService, IAppUser userService, 
-                                      IOrder orderService, IEmailSender emailService)
+                                      IOrder orderService, IEmailSender emailService, IConfiguration config)
         {
             this.productService = productService;
             this.userService = userService;
             this.cartService = cartService;
             this.orderService = orderService;
             this.emailService = emailService;
+            this._config = config;
         }
 
         #endregion
@@ -162,30 +166,21 @@ namespace RgSite.Controllers
             var vM = new CheckoutFormViewModel
             {
                 ShoppingCart = cart,
-                States = await cartService.GetStatesAsync()
+                States = await cartService.GetStatesAsync(),
+                StripePublicKey = _config["Stripe:PublicKey"].ToString()
             };
 
             return View("CheckoutForm", vM);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PlaceOrder(CheckoutFormViewModel model)
+        public async Task<IActionResult> PlaceOrder(CheckoutFormViewModel model, string stripeToken)
         {
             if (!ModelState.IsValid)
             {
                 //var errors = ModelState.Values.SelectMany(v => v.Errors).ToList();
                 return RedirectToAction("Checkout");
             }
-
-            var paymentDetail = new PaymentDetail
-            {
-                PaymentDetailId = model.PaymentDetail.PaymentDetailId,
-                CardOwnerName = model.PaymentDetail.CardOwnerName,
-                CardNumber = model.PaymentDetail.CardNumber,
-                Expiration = model.PaymentDetail.Expiration,
-                CVV = model.PaymentDetail.CVV,
-                CardType = model.PaymentDetail.CardType
-            };
 
             var billingDetail = new BillingDetail
             {
@@ -214,8 +209,7 @@ namespace RgSite.Controllers
 
             //need to check if shiptodifferentaddress is true, if so, use the ShippingFormViewModel property. SKIP this
 
-
-            var order = new Order
+            var order = new Data.Models.Order
             {
                 Total = total,
                 Placed = DateTime.Now,
@@ -232,15 +226,24 @@ namespace RgSite.Controllers
                 ProductSize = item.Price.Size,
                 ProductCost = item.Price.Cost,
                 Order = order
-            })
-            .ToList();
+            }).ToList();
 
-            // need to process payment
+            // Process payment
+            var charges = new ChargeService();
 
-
-            if (await orderService.AddOrderAsync(order, orderDetails))
+            var charge = charges.Create(new ChargeCreateOptions
             {
-                await emailService.SendEmailAsync(model.Email, "Your Order Confirmation", "Please login to your account to view your orders");
+                Amount = (int)(total * 100),
+                Description = "Purchase",
+                Currency = "usd",
+                Source = stripeToken
+            });
+
+            // Note update Order model to include a StripeCustomerId so we can save this in the DB. This id will link to the order.
+            // the value will come from charge.CustomerId
+            if (charge.Status == "succeeded" && await orderService.AddOrderAsync(order, orderDetails))
+            {
+                //await emailService.SendEmailAsync(model.Email, "Your Order Confirmation", "Please login to your account to view your orders");
 
                 // empty out shoppingcart once order is completed
                 await cartService.ClearCartAsync(user.Id);
@@ -275,11 +278,11 @@ namespace RgSite.Controllers
 
         #region Helpers
 
-        private async Task<Address> BuildAddressModel(AddressViewModel addressVM)
+        private async Task<Data.Models.Address> BuildAddressModel(AddressViewModel addressVM)
         {
             var state = await cartService.GetStateByIdAsync(addressVM.State.Id);
 
-            return new Address
+            return new Data.Models.Address
             {
                 Id = addressVM.Id,
                 Street = addressVM.Street,

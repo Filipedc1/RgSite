@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.Extensions.Configuration;
 using RgSite.Data.Models;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RgSite.ViewModels
 {
@@ -47,7 +42,7 @@ namespace RgSite.ViewModels
         public bool ShipToDifferentAddress                      { get; set; }
 
 
-        public PaymentDetailViewModel PaymentDetail             { get; set; } = new PaymentDetailViewModel();
+        //public PaymentDetailViewModel PaymentDetail             { get; set; } = new PaymentDetailViewModel();
         public ShoppingCartViewModel ShoppingCart               { get; set; }
 
         public State State                                      { get; set; }
@@ -56,5 +51,7 @@ namespace RgSite.ViewModels
 
         // Shipping Info IF different from Billing info
         public ShippingFormViewModel ShippingInfo { get; set; } = new ShippingFormViewModel();
+
+        public string StripePublicKey { get; set; }
     }
 }
