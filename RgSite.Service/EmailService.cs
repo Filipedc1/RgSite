@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
-using RgSite.Data;
+﻿using RgSite.Data;
 using System;
-using System.Collections.Generic;
 using System.Net.Mail;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RgSite.Service
