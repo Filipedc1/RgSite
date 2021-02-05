@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RgSite.Data
+﻿namespace RgSite.Core.Models
 {
-    public static class RoleName
+    public static class RoleConstants
     {
         public const string Admin = "Admin";
         public const string Customer = "Customer";

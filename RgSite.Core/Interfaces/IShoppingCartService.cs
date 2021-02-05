@@ -1,12 +1,10 @@
 ﻿using RgSite.Data.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace RgSite.Data
+namespace RgSite.Core.Interfaces
 {
-    public interface IShoppingCart
+    public interface IShoppingCartService
     {
         Task<List<CartItem>> GetAllAsync(string userId);
         Task<CartItem> GetByIdAsync(int itemId);

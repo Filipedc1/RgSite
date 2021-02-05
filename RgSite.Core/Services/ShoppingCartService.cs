@@ -1,25 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RgSite.Core.Interfaces;
+using RgSite.Core.Models;
 using RgSite.Data;
 using RgSite.Data.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace RgSite.Service
+namespace RgSite.Core.Services
 {
-    public class ShoppingCartService : IShoppingCart
+    public class ShoppingCartService : IShoppingCartService
     {
         private readonly ApplicationDbContext _database;
-        private readonly IAppUser userService;
-        private readonly IProduct productService;
+        private readonly IUserService _userService;
+        private readonly IProductService _productService;
 
-        public ShoppingCartService(ApplicationDbContext context, IAppUser userService, IProduct productService)
+        public ShoppingCartService(ApplicationDbContext context, IUserService userService, IProductService productService)
         {
             _database = context;
-            this.userService = userService;
-            this.productService = productService;
+            this._userService = userService;
+            this._productService = productService;
         }
 
         public async Task<List<CartItem>> GetAllAsync(string userId)
@@ -98,7 +98,7 @@ namespace RgSite.Service
 
             foreach (var item in cartItems)
             {
-                item.Price.Cost = (role == RoleName.Customer || role == RoleName.Admin) ? item.Price.CustomerCost : item.Price.SalonCost;
+                item.Price.Cost = (role == RoleConstants.Customer || role == RoleConstants.Admin) ? item.Price.CustomerCost : item.Price.SalonCost;
                 total += item.Price.Cost * item.Quantity;
             }
 

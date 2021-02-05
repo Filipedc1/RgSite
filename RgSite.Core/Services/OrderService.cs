@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RgSite.Core.Interfaces;
 using RgSite.Data;
 using RgSite.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace RgSite.Service
+namespace RgSite.Core.Services
 {
-    public class OrderService : IOrder
+    public class OrderService : IOrderService
     {
         private readonly ApplicationDbContext _database;
 

@@ -1,12 +1,10 @@
 ﻿using RgSite.Data.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace RgSite.Data
+namespace RgSite.Core.Interfaces
 {
-    public interface IAppUser
+    public interface IUserService
     {
         Task<AppUser> GetByIdAsync(string id);
         Task<IEnumerable<AppUser>> GetAllAsync();

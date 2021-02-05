@@ -1,12 +1,11 @@
-﻿using RgSite.Data.Models;
-using System;
+﻿using RgSite.Core.Models;
+using RgSite.Data.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace RgSite.Data
+namespace RgSite.Core.Interfaces
 {
-    public interface IProduct
+    public interface IProductService
     {
         Task<Product> GetProductByIdAsync(int id);
         Task<List<Product>> GetAllProductsAsync();

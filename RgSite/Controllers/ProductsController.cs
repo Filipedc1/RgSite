@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using RgSite.Data;
+using RgSite.Core.Interfaces;
+using RgSite.Core.Models;
 using RgSite.Data.Models;
 using RgSite.ViewModels;
 
@@ -14,24 +13,24 @@ namespace RgSite.Controllers
     {
         #region Fields
 
-        private readonly IProduct productService;
-        private readonly IAppUser userService;
+        private readonly IProductService _productService;
+        private readonly IUserService _userService;
 
         #endregion
 
         #region Constructor
 
-        public ProductsController(IProduct productService, IAppUser userService)
+        public ProductsController(IProductService productService, IUserService userService)
         {
-            this.productService = productService;
-            this.userService = userService;
+            _productService = productService;
+            _userService = userService;
         }
 
         #endregion
 
         public async Task<IActionResult> Index()
         {
-            var collections = await productService.GetAllProductCollectionsAsync();
+            var collections = await _productService.GetAllProductCollectionsAsync();
 
             if (collections == null || collections.Count == 0)
                 return BadRequest();
@@ -48,9 +47,9 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> CollectionDetail(int id)
         {
-            string role = await userService.GetCurrentUserRoleAsync();
+            string role = await _userService.GetCurrentUserRoleAsync();
 
-            var collection = await productService.GetProductCollectionByIdAsync(id);
+            var collection = await _productService.GetProductCollectionByIdAsync(id);
             if (collection == null) return BadRequest();
 
             var products = collection.CollectionProducts
@@ -61,7 +60,7 @@ namespace RgSite.Controllers
                                          Description = prod.Product.Description,
                                          ImageUrl = prod.Product.ImageUrl,
                                          Prices = prod.Product.Prices,
-                                         PriceRange = productService.GetProductPriceRange(prod.Product, role)
+                                         PriceRange = _productService.GetProductPriceRange(prod.Product, role)
                                      })
                                      .ToList();
 
@@ -79,9 +78,9 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> ProductDetail(int id)
         {
-            string role = await userService.GetCurrentUserRoleAsync();
+            string role = await _userService.GetCurrentUserRoleAsync();
 
-            var product = await productService.GetProductByIdAsync(id);
+            var product = await _productService.GetProductByIdAsync(id);
             if (product == null) return BadRequest();
 
             var vM = new ProductViewModel
@@ -89,10 +88,10 @@ namespace RgSite.Controllers
                 ProductId = product.ProductId,
                 Name = product.Name,
                 Description = product.Description,
-                Comments = await productService.GetAllCommentsByProductIdAsync(product.ProductId),
+                Comments = await _productService.GetAllCommentsByProductIdAsync(product.ProductId),
                 ImageUrl = product.ImageUrl,
                 Prices = product.Prices,
-                PriceRange = productService.GetProductPriceRange(product, role),
+                PriceRange = _productService.GetProductPriceRange(product, role),
             };
 
             return View(vM);
@@ -100,15 +99,15 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> GetPrice(int productId, string selectedSize)
         {
-            string role = await userService.GetCurrentUserRoleAsync();
+            string role = await _userService.GetCurrentUserRoleAsync();
 
-            var product = await productService.GetProductByIdAsync(productId);
+            var product = await _productService.GetProductByIdAsync(productId);
             decimal cost = 0;
 
             if (product != null)
             {
                 var price = product.Prices.FirstOrDefault(p => p.Size == selectedSize);
-                cost = (role == RoleName.Customer || role == RoleName.Admin) ? price.CustomerCost : price.SalonCost;
+                cost = (role == RoleConstants.Customer || role == RoleConstants.Admin) ? price.CustomerCost : price.SalonCost;
             }
 
             string result = $"${cost}";
@@ -124,9 +123,9 @@ namespace RgSite.Controllers
             if (!ModelState.IsValid || vm.Comment == null)
                 return BadRequest();
 
-            var user = await userService.GetCurrentUserAsync();
+            var user = await _userService.GetCurrentUserAsync();
 
-            if (await productService.AddNewCommentAsync(vm.ProductId, vm.Comment, user))
+            if (await _productService.AddNewCommentAsync(vm.ProductId, vm.Comment, user))
                 return RedirectToAction("ProductDetail", "Products", new { @id = vm.ProductId });
 
             return BadRequest();
@@ -134,10 +133,10 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> DeleteComment(int id)
         {
-            var comment = await productService.GetCommentByIdAsync(id);
-            var product = await productService.GetProductByIdAsync(comment.Product.ProductId);
+            var comment = await _productService.GetCommentByIdAsync(id);
+            var product = await _productService.GetProductByIdAsync(comment.Product.ProductId);
 
-            if (await productService.DeleteCommentAsync(comment))
+            if (await _productService.DeleteCommentAsync(comment))
                 return RedirectToAction("ProductDetail", new { id = product.ProductId });
 
             return BadRequest();

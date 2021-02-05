@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using RgSite.Data;
 using RgSite.Data.Models;
-using RgSite.Service;
 using Stripe;
+using RgSite.Core.Services;
+using RgSite.Core.Interfaces;
 
 namespace RgSite
 {
@@ -42,11 +43,11 @@ namespace RgSite
 
             services.AddHttpContextAccessor();
 
-            services.AddScoped<IAppUser, AppUserService>();
-            services.AddScoped<IProduct, Service.ProductService>();
-            services.AddScoped<IShoppingCart, ShoppingCartService>();
-            services.AddScoped<IOrder, Service.OrderService>();
-            services.AddTransient<IEmail, EmailService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IProductService, Core.Services.ProductService>();
+            services.AddScoped<IShoppingCartService, ShoppingCartService>();
+            services.AddScoped<IOrderService, Core.Services.OrderService>();
+            services.AddTransient<IEmailService, EmailService>();
 
             // Configure Stripe
             StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];

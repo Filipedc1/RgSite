@@ -1,24 +1,26 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using RgSite.Core.Interfaces;
+using RgSite.Core.Models;
 using RgSite.Data;
 using RgSite.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RgSite.Service
+namespace RgSite.Core.Services
 {
-    public class AppUserService : IAppUser
+    public class UserService : IUserService
     {
         private readonly ApplicationDbContext _database;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly UserManager<AppUser> userManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public AppUserService(ApplicationDbContext context, UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor)
+        public UserService(ApplicationDbContext context, UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _database = context;
-            this.userManager = userManager;
+            _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -45,17 +47,17 @@ namespace RgSite.Service
         public async Task<AppUser> GetCurrentUserAsync()
         {
             var username = _httpContextAccessor.HttpContext.User.Identity.Name;
-            return await userManager.FindByNameAsync(username);
+            return await _userManager.FindByNameAsync(username);
         }
 
         public async Task<string> GetCurrentUserRoleAsync()
         {
             // If user is not logged in, assume Customer role
             if (!_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
-                return RoleName.Customer;
+                return RoleConstants.Customer;
 
             var user = await GetCurrentUserAsync();
-            var roles = await userManager.GetRolesAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
 
             return roles.FirstOrDefault();
         }

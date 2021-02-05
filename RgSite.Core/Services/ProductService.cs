@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RgSite.Core.Interfaces;
+using RgSite.Core.Models;
 using RgSite.Data;
 using RgSite.Data.Models;
 using System;
@@ -7,17 +9,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RgSite.Service
+namespace RgSite.Core.Services
 {
-    public class ProductService : IProduct
+    public class ProductService : IProductService
     {
         private readonly ApplicationDbContext _database;
-        private readonly IAppUser userService;
+        private readonly IUserService _userService;
 
-        public ProductService(ApplicationDbContext context, IAppUser userService)
+        public ProductService(ApplicationDbContext context, IUserService userService)
         {
             _database = context;
-            this.userService = userService;
+            this._userService = userService;
         }
 
         public async Task AddProductAsync(Product product)
@@ -80,11 +82,11 @@ namespace RgSite.Service
             string range = "N/A";
             if (!product.Prices.Any()) return range;
 
-            if (role == RoleName.Customer || role == RoleName.Admin)
+            if (role == RoleConstants.Customer || role == RoleConstants.Admin)
             {
                 range = $"${product.Prices.FirstOrDefault().CustomerCost} - ${product.Prices.LastOrDefault().CustomerCost}";
             }
-            else if (role == RoleName.Salon)
+            else if (role == RoleConstants.Salon)
             {
                 range = $"${product.Prices.FirstOrDefault().SalonCost} - ${product.Prices.LastOrDefault().SalonCost}";
             }
