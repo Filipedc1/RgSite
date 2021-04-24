@@ -10,9 +10,21 @@ namespace RgSite.Data.Models
         public decimal Total                                    { get; set; }
         public DateTime Placed                                  { get; set; }
 
-        public virtual IEnumerable<OrderDetail> OrderDetails    { get; set; }
-        public virtual BillingDetail BillingDetail              { get; set; }
-        public virtual AppUser User                             { get; set; }
+ 
+        public AppUser User                             { get; set; }
+        public BillingDetail BillingDetail              { get; set; }
+        public IEnumerable<OrderDetail> OrderDetails    { get; set; }
+
+        // Stripe
+
+        //public string StripeCustomerId { get; set; }
+        //public string StripeCustomerEmail { get; set; }
+        //public string Currency { get; set; }
+        //public decimal SubTotal { get; set; }
+        //public decimal Total { get; set; }
+        //public string PaymentIntentId { get; set; }
+        //public string PaymentStatus { get; set; }
+
 
         //public string StripeChargeCustomerId { get; set; }
         //public bool HasShipped { get; set; }

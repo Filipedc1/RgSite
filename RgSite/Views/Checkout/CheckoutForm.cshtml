@@ -55,7 +55,7 @@
         <!--Billing Details-->
         <div class="col-md-8 order-md-1">
             <h4 class="mb-3">BILLING DETAILS</h4>
-            <form id="payment-form" asp-controller="ShoppingCart" asp-action="PlaceOrder" class="form-horizontal" enctype="multipart/form-data">
+            <form id="payment-form" asp-controller="ShoppingCart" asp-action="Payment" class="form-horizontal" enctype="multipart/form-data">
                 <div class="row">
                     <div class="form-group col-md-6 mb-3">
                         <label asp-for="FirstName" class="control-label"></label>
@@ -116,16 +116,16 @@
                 <hr class="mb-4">
 
                 <!--Payment details-->
-                <h4 class="mb-3">Payment</h4>
+                <!--<h4 class="mb-3">Payment</h4>
                 <div class="row">
-                    <div id="card-element" class="col-md-10 mb-2"></div>
+                    <div id="card-element" class="col-md-10 mb-2"></div>-->
 
                     <!-- Used to display Element errors. -->
-                    <div id="card-errors" role="alert"></div>
+                    <!--<div id="card-errors" role="alert"></div>
                 </div>
-                <hr class="mb-4">
+                <hr class="mb-4">-->
 
-                <button class="btn btn-primary btn-lg btn-block custom-button-color" type="submit">Continue to checkout</button>
+                <button class="btn btn-primary btn-lg btn-block custom-button-color" type="submit">Continue to payment</button>
             </form>
         </div>
     </div>
@@ -138,57 +138,57 @@
         var stripe = Stripe('@Model.StripePublicKey');
         var elements = stripe.elements();
 
-        var style = {
-            base: {
-            // Add your base input styles here. For example:
-            fontSize: '16px',
-            color: '#32325d',
-            },
-        };
+        //var style = {
+        //    base: {
+        //    // Add your base input styles here. For example:
+        //    fontSize: '16px',
+        //    color: '#32325d',
+        //    },
+        //};
 
-        var card = elements.create("card", { style: style })
-        card.mount("#card-element");
+        //var card = elements.create("card", { style: style })
+        //card.mount("#card-element");
 
-        // Handle real-time validation errors from the card element
-        card.addEventListener('change', function (event) {
-            var displayError = document.getElementById('card-errors');
-            if (event.error) {
-                displayError.textContent = event.error.message;
-            } else {
-                displayError.textContent = '';
-            }
-        });
+        //// Handle real-time validation errors from the card element
+        //card.addEventListener('change', function (event) {
+        //    var displayError = document.getElementById('card-errors');
+        //    if (event.error) {
+        //        displayError.textContent = event.error.message;
+        //    } else {
+        //        displayError.textContent = '';
+        //    }
+        //});
 
-        // Handle form submission. Create a token or display an error when the form is submitted.
-        var form = document.getElementById('payment-form');
+        //// Handle form submission. Create a token or display an error when the form is submitted.
+        //var form = document.getElementById('payment-form');
 
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
+        //form.addEventListener('submit', function(event) {
+        //    event.preventDefault();
 
-            stripe.createToken(card).then(function(result) {
-                if (result.error) {
-                    // Inform the customer that there was an error.
-                    var errorElement = document.getElementById('card-errors');
-                    errorElement.textContent = result.error.message;
-                } else {
-                    // Send the token to your server.
-                    stripeTokenHandler(result.token);
-                }
-            });
-        });
+        //    stripe.createToken(card).then(function(result) {
+        //        if (result.error) {
+        //            // Inform the customer that there was an error.
+        //            var errorElement = document.getElementById('card-errors');
+        //            errorElement.textContent = result.error.message;
+        //        } else {
+        //            // Send the token to your server.
+        //            stripeTokenHandler(result.token);
+        //        }
+        //    });
+        //});
 
-        function stripeTokenHandler(token) {
-            // Insert the token ID into the form so it gets submitted to the server
-            var form = document.getElementById('payment-form');
-            var hiddenInput = document.createElement('input');
-            hiddenInput.setAttribute('type', 'hidden');
-            hiddenInput.setAttribute('name', 'stripeToken');
-            hiddenInput.setAttribute('value', token.id);
-            form.appendChild(hiddenInput);
+        //function stripeTokenHandler(token) {
+        //    // Insert the token ID into the form so it gets submitted to the server
+        //    var form = document.getElementById('payment-form');
+        //    var hiddenInput = document.createElement('input');
+        //    hiddenInput.setAttribute('type', 'hidden');
+        //    hiddenInput.setAttribute('name', 'stripeToken');
+        //    hiddenInput.setAttribute('value', token.id);
+        //    form.appendChild(hiddenInput);
 
-            // Submit the form
-            form.submit();
-        }
+        //    // Submit the form
+        //    form.submit();
+        //}
     </script>
 }
 

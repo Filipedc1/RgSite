@@ -28,7 +28,6 @@
   <ItemGroup>
     <ProjectReference Include="..\RgSite.Core\RgSite.Core.csproj" />
     <ProjectReference Include="..\RgSite.Data\RgSite.Data.csproj" />
-    <ProjectReference Include="..\RgSite.Service\RgSite.Core.csproj" />
   </ItemGroup>
 
 </Project>

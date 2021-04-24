@@ -13,10 +13,7 @@ namespace RgSite.Core.Interfaces
         Task<bool> IsInCartAsync(int itemId, int productSizeId);
         Task<bool> UpdateQuantityAsync(int itemId, bool isAdd, int quantity = 0);
         Task<bool> ClearCartAsync(string userId);
-        decimal GetCartTotalCostAsync(string userId, string role, List<CartItem> cartItems);
-
-        Task<IEnumerable<State>> GetStatesAsync();
-
-        Task<State> GetStateByIdAsync(int id); 
+        decimal GetCartTotalCost(bool isCustomer, List<CartItem> cartItems);
+        Task<List<State>> GetStatesAsync(string country, string webRootPath);
     }
 }

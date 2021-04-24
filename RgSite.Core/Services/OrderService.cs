@@ -2,10 +2,13 @@
 using RgSite.Core.Interfaces;
 using RgSite.Data;
 using RgSite.Data.Models;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Order = RgSite.Data.Models.Order;
 
 namespace RgSite.Core.Services
 {
@@ -47,9 +50,9 @@ namespace RgSite.Core.Services
                                   .FirstOrDefaultAsync(o => o.OrderId == id);
         }
 
-        public async Task<bool> AddOrderAsync(Order order, IEnumerable<OrderDetail> orderDetails)
+        public async Task<(bool, int)> AddOrderAsync(Order order, IEnumerable<OrderDetail> orderDetails)
         {
-            if (order == null) return false;
+            if (order == null) return (false, 0);
 
             try
             {
@@ -59,11 +62,60 @@ namespace RgSite.Core.Services
             }
             catch (Exception)
             {
-                return false;
+                return (false, 0);
             }
 
-            return true;
+            return (true, order.OrderId);
         }
+
+        //public async Task<bool> UpdateOrderAsync(Order order, AppUser user, Session session)
+        //{
+        //    if (order is null) return false;
+
+        //    try
+        //    {
+        //        order.Total = (decimal)session.AmountTotal / 100;
+        //        order.SubTotal = (decimal)session.AmountSubtotal / 100;
+        //        order.StripeCustomerId = session.CustomerId;
+        //        order.StripeCustomerEmail = session.CustomerEmail;
+        //        order.Currency = session.Currency;
+        //        order.PaymentIntentId = session.PaymentIntentId;
+        //        order.PaymentStatus = session.PaymentStatus;
+
+        //        //order.ShippingDetail = new ShippingDetail
+        //        //{
+        //        //    RecipientName = session.Shipping.Name,
+        //        //    RecipientPhone = session.Shipping.Phone,
+        //        //    Carrier = session.Shipping.Carrier,
+        //        //    TrackingNumber = session.Shipping.TrackingNumber,
+        //        //    Address = new Data.Models.Address
+        //        //    {
+        //        //        AddressLine1 = session.Shipping.Address.Line1,
+        //        //        AddressLine2 = session.Shipping.Address.Line2,
+        //        //        Country = session.Shipping.Address.Country,
+        //        //        City = session.Shipping.Address.City,
+        //        //        State = session.Shipping.Address.State,
+        //        //        Zip = session.Shipping.Address.PostalCode
+        //        //    }
+        //        //};
+
+        //        if (string.IsNullOrWhiteSpace(user.StripeCustomerId))
+        //        {
+        //            user.StripeCustomerId = session.CustomerId;
+        //            _database.AppUsers.Update(user);
+        //        }
+
+        //        _database.Orders.Update(order);
+
+        //        await _database.SaveChangesAsync();
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return false;
+        //    }
+
+        //    return true;
+        //}
 
         public async Task<List<OrderDetail>> GetOrderDetailsForOrder(int orderId)
         {
@@ -73,19 +125,85 @@ namespace RgSite.Core.Services
                                   .ToListAsync();
         }
 
-        public async Task<decimal> GetCartTotalCostWithShippingAsync(string userId)
+        public async Task<(bool, int)> CreateOrderAsync(List<CartItem> cartItems, AppUser user)
         {
-            throw new NotImplementedException();
-            //decimal total = 0;
+            var order = new Order
+            {
+                Placed = DateTime.UtcNow,
+                User = user
+            };
 
-            //var cartItems = await GetAllAsync(userId);
-            ////var shippingCosts = 
+            var orderDetails = cartItems.Select(item => new OrderDetail
+            {
+                ProductId = item.ProductId,
+                ProductName = item.Name,
+                ProductQuantity = item.Quantity,
+                ProductCost = item.Price.Cost,
+                Order = order
+            }).ToList();
 
-            //if (cartItems == null || cartItems.Count == 0) return total;
+            (bool success, int orderId) = await AddOrderAsync(order, orderDetails);
 
-            //cartItems.ForEach(i => total += i.Price.Cost * i.Quantity);
+            return (success, orderId);
+        }
 
-            //return total * shippingCosts;
+        // Working on this
+        public async Task<bool> ProcessOrderAsync(decimal total, string stripeToken, BillingDetail billingDetail, List<CartItem> cartItems, AppUser user)
+        {
+            // Process payment - Stripe
+            string clientSecret = CreateStripePaymentIntent(total);
+
+            // if charge succeeded
+            if (true)
+            {
+                var order = new Order
+                {
+                    Total = total,
+                    Placed = DateTime.UtcNow,
+                    BillingDetail = billingDetail,
+                    User = user,
+                    //StripeChargeId = charge.Id
+                };
+
+                var orderDetails = cartItems.Select(item => new OrderDetail
+                {
+                    ProductId = item.ProductId,
+                    ProductName = item.Name,
+                    ProductQuantity = item.Quantity,
+                    ProductCost = item.Price.Cost,
+                    Order = order
+                }).ToList();
+
+                (bool success, int orderId) = await AddOrderAsync(order, orderDetails);
+
+                return success;
+            }
+        }
+
+        public string CreateStripePaymentIntent(decimal amount)
+        {
+            try
+            {
+                var options = new PaymentIntentCreateOptions
+                {
+                    Amount = (long)amount,
+                    Currency = "usd",
+                    // Verify your integration in this guide by including this parameter
+                    Metadata = new Dictionary<string, string>
+                    {
+                        { "integration_check", "accept_a_payment" }
+                    },
+                };
+
+                var paymentIntent = new PaymentIntentService().Create(options);
+
+                return paymentIntent.ClientSecret;
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return null;
         }
     }
 }
