@@ -1,9 +1,4 @@
-﻿using RgSite.Data;
-using RgSite.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using RgSite.Data.Models;
 
 namespace RgSite.ViewModels
 {

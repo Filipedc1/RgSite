@@ -10,7 +10,6 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 Users.txt
-RgSite TODO.txt
 SeedDataScript.cs
 SeedPricesScript/
 

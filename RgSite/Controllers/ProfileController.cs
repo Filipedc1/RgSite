@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,10 +6,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using RgSite.Data;
+using RgSite.Core.Helpers;
+using RgSite.Core.Interfaces;
 using RgSite.Data.Models;
-using RgSite.Helpers;
 using RgSite.ViewModels;
 
 namespace RgSite.Controllers
@@ -21,23 +18,23 @@ namespace RgSite.Controllers
     {
         #region Fields
 
-        private readonly UserManager<AppUser> userManager;
-        private readonly SignInManager<AppUser> signInManager;
-        private readonly IAppUser userService;
-        private readonly IOrder orderService;
-        private readonly IHostingEnvironment _hosting;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly IUserService _userService;
+        private readonly IOrderService _orderService;
+        private readonly IWebHostEnvironment _hosting;
 
         #endregion
 
         #region Controller
 
-        public ProfileController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IAppUser userService, IOrder orderService, IHostingEnvironment he)
+        public ProfileController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IUserService userService, IOrderService orderService, IWebHostEnvironment he)
         {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
-            this.userService = userService;
-            this.orderService = orderService;
-            this._hosting = he;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _userService = userService;
+            _orderService = orderService;
+            _hosting = he;
         }
 
         #endregion
@@ -47,7 +44,7 @@ namespace RgSite.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
-            var users = await userService.GetAllAsync();
+            var users = await _userService.GetAllAsync();
             if (!users.Any()) return NotFound();
 
             var profilesVM = users.Select(user => new ProfileViewModel
@@ -72,7 +69,7 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> Detail(string id)
         {
-            var user = await userService.GetByIdAsync(id);
+            var user = await _userService.GetByIdAsync(id);
             if (user == null) return NotFound();
 
             var viewMod = new ProfileViewModel
@@ -85,7 +82,7 @@ namespace RgSite.Controllers
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
                 MemberSince = user.MemberSince,
-                OrderHistory = await orderService.GetAllOrdersAsync(),
+                OrderHistory = await _orderService.GetAllOrdersAsync(),
                 ProfileImageUrl = user.ProfileImageUrl,
                 IsAdmin = User.IsInRole("Admin") ? true : false
             };
@@ -111,7 +108,7 @@ namespace RgSite.Controllers
 
         public async Task<IActionResult> UpdateAccount(string id)
         {
-            var user = await userService.GetByIdAsync(id);
+            var user = await _userService.GetByIdAsync(id);
             if (user == null) return NotFound();
 
             var viewMod = new ProfileViewModel
@@ -134,13 +131,13 @@ namespace RgSite.Controllers
                 return View("ProfileForm", vM);
             }
 
-            var user = await userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return Json(new { message = "failed" });
 
             if (profileVM.Email != user.Email)
             {
-                var setEmailResult = await userManager.SetEmailAsync(user, profileVM.Email);
+                var setEmailResult = await _userManager.SetEmailAsync(user, profileVM.Email);
                 if (!setEmailResult.Succeeded)
                 {
                     return Json(new { message = "failed" });
@@ -149,7 +146,7 @@ namespace RgSite.Controllers
 
             if (profileVM.PhoneNumber != user.PhoneNumber)
             {
-                var setPhoneResult = await userManager.SetPhoneNumberAsync(user, profileVM.PhoneNumber);
+                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, profileVM.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
                     return Json(new { message = "failed" });
@@ -158,21 +155,21 @@ namespace RgSite.Controllers
 
             if (image != null)
             {
-                if (ImageUtil.UploadImage(image, _hosting))
+                if (ImageUtil.UploadImage(image, _hosting.WebRootPath))
                 {
-                    var imageUrl = "/images/" + Path.GetFileName(image.FileName);
-                    await userService.SetProfileImageAsync(user, imageUrl);
+                    string imageUrl = $"/images/{Path.GetFileName(image.FileName)}";
+                    await _userService.SetProfileImageAsync(user, imageUrl);
                 }
             }
 
-            await signInManager.RefreshSignInAsync(user);
+            await _signInManager.RefreshSignInAsync(user);
 
             return Json(new { message = "success" });
         }
 
         public async Task<IActionResult> OrderHistoryDetail(int id)
         {
-            var orderDetails = await orderService.GetOrderDetailsForOrder(id);
+            var orderDetails = await _orderService.GetOrderDetailsForOrder(id);
 
             var viewMod = new OrderDetailListViewModel
             {

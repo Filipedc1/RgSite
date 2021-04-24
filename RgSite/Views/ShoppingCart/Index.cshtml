@@ -90,7 +90,7 @@
                 </table>
                 @if (Model.CartItems.Any())
                 {
-                    <a id="checkout" class="btn btn-success btn-block custom-button-color" role="button" asp-controller="ShoppingCart" asp-action="Checkout" asp-route-id="@Model.User.Id">CHECKOUT</a>
+                    <a id="checkout" class="btn btn-success btn-block custom-button-color" role="button" asp-controller="Checkout" asp-action="Index" asp-route-id="@Model.User.Id">CHECKOUT</a>
                 }
                 else
                 {

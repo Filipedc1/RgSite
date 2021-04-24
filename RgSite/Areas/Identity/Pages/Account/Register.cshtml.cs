@@ -60,11 +60,6 @@ namespace RgSite.Areas.Identity.Pages.Account
             public DateTime DateJoined { get; set; }
 
             [Required]
-            [Display(Name = "Username")]
-            [StringLength(20, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
-            public string Username { get; set; }
-
-            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -103,7 +98,6 @@ namespace RgSite.Areas.Identity.Pages.Account
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
                     PhoneNumber = Input.PhoneNumber,
-                    UserName = Input.Username,
                     Email = Input.Email,
                     Salon = (!string.IsNullOrEmpty(Input.CosmetologyOrSalonLicense) && !string.IsNullOrEmpty(Input.SalonOrHairCompany)) 
                             ? BuildSalonModel() 

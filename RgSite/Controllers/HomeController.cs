@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using RgSite.Data;
+using RgSite.Core.Interfaces;
 using RgSite.Models;
 using RgSite.ViewModels;
 
@@ -15,14 +11,14 @@ namespace RgSite.Controllers
     {
         #region Fields
 
-        private readonly IProduct productService;
-        private readonly IEmail emailService;
+        private readonly IProductService productService;
+        private readonly IEmailService emailService;
 
         #endregion
 
         #region Constructor
 
-        public HomeController(IProduct productService, IEmail emailService)
+        public HomeController(IProductService productService, IEmailService emailService)
         {
             this.productService = productService;
             this.emailService = emailService;
@@ -47,7 +43,7 @@ namespace RgSite.Controllers
         {
             if (!ModelState.IsValid) return View("ContactUs", model);
 
-            bool good = await emailService.SendEmailAsync(model.Email, model.To, model.Subject, model.Message);
+            bool result = await emailService.SendEmailAsync(model.Email, model.Subject, model.Message);
 
             return View("Index");
         }
